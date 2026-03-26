@@ -467,6 +467,110 @@ const CLINICIAN_LABELS = {
     "AI-simulated specialist panel for educational exploration. Not a substitute for clinical judgment. Evidence citations should be independently verified. MedPanel does not constitute medical advice.",
 };
 
+/* Patient-mode safety flags — same numbers, simpler language */
+const PATIENT_SAFETY_FLAGS = [
+  {
+    severity: "high",
+    title: "Your cholesterol balance needs attention",
+    description:
+      "Your 'bad' cholesterol (LDL) is 151 mg/dL which is high, and your 'good' cholesterol (HDL) is only 36 mg/dL which is low. On top of that, your inflammation marker (hs-CRP) is 5.8 mg/L. Together, these three numbers create a high-risk pattern for heart disease. The ratio of bad-to-good cholesterol is 4.2, but the target is below 3.0. Being on testosterone replacement makes this more important to address.",
+    action:
+      "Ask your doctor for a more detailed cholesterol test that includes ApoB, Lp(a), and LDL particle count. Also ask to retest your inflammation marker (hs-CRP) to see if it's come down since 2024.",
+  },
+  {
+    severity: "moderate",
+    title: "Your inflammation level was very high",
+    description:
+      "Your hs-CRP (a blood marker for inflammation) was 5.8 mg/L — that's nearly 6 times higher than normal. This was measured back in September 2024 during a tougher period. We don't know what your current level is, but if it's still high, something in your body is actively causing inflammation.",
+    action:
+      "Get your hs-CRP retested to see where it stands now. If it's still above 2.0, your doctor should investigate what's causing it — common sources include gut issues, gum disease, insulin resistance, or hidden infections.",
+  },
+  {
+    severity: "moderate",
+    title: "Your kidneys are working below normal for your age",
+    description:
+      "Your creatinine is 1.26 mg/dL (slightly high) and your kidney score (eGFR) is 79 by the standard formula — but this test is less accurate for muscular people. A more accurate test (cystatin C) showed 88, which is better but still below what's expected at age 30. Your history of ketamine use adds extra risk to your kidneys.",
+    action:
+      "Track your kidney function with the cystatin C test every 3-6 months to see if it's stable or changing. Ask for a urine test (UACR) to check for early kidney damage. Mention your previous ketamine use to your kidney doctor.",
+  },
+  {
+    severity: "low",
+    title: "Your estrogen has never been checked while on testosterone",
+    description:
+      "Testosterone can convert to estrogen in your body. Your previous injection method (into belly fat) may have increased this conversion. You recently switched to a different injection method (IM) in March 2026, but estrogen has never been measured at any point during your treatment.",
+    action:
+      "Ask for a sensitive estrogen test (called LC-MS/MS — the regular one isn't accurate for men) at your next blood draw. If it's too high, your doctor can adjust your testosterone dose.",
+  },
+];
+
+/* Patient-mode consensus — same findings, simpler wording */
+const PATIENT_CONSENSUS = [
+  {
+    text: "CoQ10 at 200mg daily is safe for you. It doesn't conflict with any of your current medications including testosterone, metoprolol, or propranolol.",
+    specialists: ["cardiologist", "nephrologist", "functional_medicine"],
+    evidenceTier: "strong",
+  },
+  {
+    text: "CoQ10 is fine to take, but it's NOT the most urgent thing to address. Your cholesterol balance (LDL 151 / HDL 36), high inflammation (CRP 5.8), and kidney function trend all need attention before optimizing supplements.",
+    specialists: ["cardiologist", "nephrologist", "functional_medicine"],
+    evidenceTier: "moderate",
+  },
+  {
+    text: "Your energy test (OAT) showed high cis-aconitic acid (65 vs normal 10-36), which suggests your mitochondria (the energy factories in your cells) are under stress. This supports trying CoQ10, but this test alone shouldn't decide the dose.",
+    specialists: ["cardiologist", "nephrologist", "functional_medicine"],
+    evidenceTier: "preliminary",
+  },
+  {
+    text: "The ubiquinol form of CoQ10 is recommended over the regular form (ubiquinone) because your body absorbs it 3-4 times better — especially important if mitochondrial function is already compromised.",
+    specialists: ["cardiologist", "nephrologist", "functional_medicine"],
+    evidenceTier: "moderate",
+  },
+];
+
+/* Patient-mode disagreements — same debate, plainer language */
+const PATIENT_DISAGREEMENTS = [
+  {
+    topic: "What should you focus on first?",
+    positions: [
+      {
+        specialist: "cardiologist",
+        position: "Get a detailed cholesterol test first",
+        reasoning:
+          "Your LDL 151 / HDL 36 / CRP 5.8 combination is the most urgent thing to act on. You need ApoB, Lp(a), and LDL particle count to understand your real heart risk. If ApoB is high, you may need cholesterol medication — and at 30 with these numbers plus testosterone, the usual '10-year risk' calculators underestimate your actual risk.",
+      },
+      {
+        specialist: "nephrologist",
+        position: "Track your kidney trend over the next few months",
+        reasoning:
+          "With your kidney score at 79 (standard test) and a history of ketamine use, we need to know if your kidneys are stable or getting worse. One blood test can't tell you that — you need measurements every 3 months to see the trend. This also affects whether any supplements need dose changes.",
+      },
+      {
+        specialist: "functional_medicine",
+        position: "Find what's causing the inflammation",
+        reasoning:
+          "Your CRP of 5.8 connects everything — it may be driving both the heart risk AND the energy problems showing up on your OAT test. If we address the root cause of inflammation — possibly gut health issues, sleep patterns, or nervous system dysregulation — many of the other findings may improve on their own.",
+      },
+    ],
+  },
+  {
+    topic: "How reliable is your energy test (OAT)?",
+    positions: [
+      {
+        specialist: "cardiologist",
+        position: "Be careful — this test has limitations",
+        reasoning:
+          "The OAT test isn't officially validated to diagnose mitochondrial problems on its own. Your elevated cis-aconitic acid could be caused by dehydration, diet, or how your kidneys filter — not necessarily damaged mitochondria. You'd need additional tests (like genetic testing) to be sure.",
+      },
+      {
+        specialist: "functional_medicine",
+        position: "The test is useful when you look at the full picture",
+        reasoning:
+          "No single marker tells the whole story, but the pattern matters: high cis-aconitic acid + abnormal suberic acid + your symptoms (fatigue, autonomic issues) + recovery from benzodiazepines all point toward mitochondrial stress. It's the combination of clues, not just one number, that supports trying CoQ10.",
+      },
+    ],
+  },
+];
+
 /* Patient-mode questions — same content, simpler language */
 const PATIENT_QUESTIONS = [
   {
@@ -517,6 +621,9 @@ export default function ConsultResultPage() {
 
   const labels = mode === "patient" ? PATIENT_LABELS : CLINICIAN_LABELS;
   const activeQuestions = mode === "patient" ? PATIENT_QUESTIONS : DEMO.questions;
+  const activeSafetyFlags = mode === "patient" ? PATIENT_SAFETY_FLAGS : DEMO.safetyFlags;
+  const activeConsensus = mode === "patient" ? PATIENT_CONSENSUS : DEMO.consensus;
+  const activeDisagreements = mode === "patient" ? PATIENT_DISAGREEMENTS : DEMO.disagreements;
 
   function handleCopyAll() {
     const header = mode === "patient"
@@ -549,7 +656,7 @@ export default function ConsultResultPage() {
         <section className="mb-8">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
-              {mode === "patient" ? PATIENT_LABELS.sectionQuestion : CLINICIAN_LABELS.sectionQuestion}
+              {labels.sectionQuestion}
             </p>
             <ModeToggle mode={mode} onChange={setMode} />
           </div>
@@ -574,12 +681,12 @@ export default function ConsultResultPage() {
         <section className="mb-8">
           <SectionHeader
             icon={<ShieldAlert size={18} className="text-amber-400" />}
-            title={mode === "patient" ? PATIENT_LABELS.sectionSafety : CLINICIAN_LABELS.sectionSafety}
-            count={DEMO.safetyFlags.length}
+            title={labels.sectionSafety}
+            count={activeSafetyFlags.length}
           />
           <div className="space-y-2">
-            {DEMO.safetyFlags.map((flag, i) => (
-              <SafetyFlag key={i} {...flag} />
+            {activeSafetyFlags.map((flag, i) => (
+              <SafetyFlag key={`${mode}-${i}`} {...flag} />
             ))}
           </div>
         </section>
@@ -590,12 +697,12 @@ export default function ConsultResultPage() {
             icon={
               <CircleCheckBig size={18} className="text-emerald-400" />
             }
-            title={mode === "patient" ? PATIENT_LABELS.sectionConsensus : CLINICIAN_LABELS.sectionConsensus}
-            count={DEMO.consensus.length}
+            title={labels.sectionConsensus}
+            count={activeConsensus.length}
           />
           <div className="space-y-2">
-            {DEMO.consensus.map((item, i) => (
-              <ConsensusItem key={i} {...item} />
+            {activeConsensus.map((item, i) => (
+              <ConsensusItem key={`${mode}-${i}`} {...item} />
             ))}
           </div>
         </section>
@@ -606,12 +713,12 @@ export default function ConsultResultPage() {
             icon={
               <CircleAlert size={18} className="text-amber-400" />
             }
-            title={mode === "patient" ? PATIENT_LABELS.sectionDisagreements : CLINICIAN_LABELS.sectionDisagreements}
-            count={DEMO.disagreements.length}
+            title={labels.sectionDisagreements}
+            count={activeDisagreements.length}
           />
           <div className="space-y-3">
-            {DEMO.disagreements.map((d, i) => (
-              <DisagreementCard key={i} {...d} />
+            {activeDisagreements.map((d, i) => (
+              <DisagreementCard key={`${mode}-${i}`} {...d} />
             ))}
           </div>
         </section>
@@ -623,7 +730,7 @@ export default function ConsultResultPage() {
               icon={
                 <Stethoscope size={18} className="text-emerald-400" />
               }
-              title={mode === "patient" ? PATIENT_LABELS.sectionQuestions : CLINICIAN_LABELS.sectionQuestions}
+              title={labels.sectionQuestions}
               count={mode === "patient" ? PATIENT_QUESTIONS.length : DEMO.questions.length}
             />
             <button
@@ -669,7 +776,7 @@ export default function ConsultResultPage() {
         <section className="mb-8">
           <SectionHeader
             icon={<BookOpen size={18} className="text-blue-400" />}
-            title={mode === "patient" ? PATIENT_LABELS.sectionEvidence : CLINICIAN_LABELS.sectionEvidence}
+            title={labels.sectionEvidence}
           />
           <EvidenceSection evidence={DEMO.evidence} />
         </section>
@@ -677,7 +784,7 @@ export default function ConsultResultPage() {
         {/* ---- Disclaimer Footer ---- */}
         <footer className="rounded-[var(--mp-radius)] border border-slate-800/60 bg-gray-900/50 px-4 py-4">
           <p className="text-center text-xs leading-relaxed text-slate-500">
-            {mode === "patient" ? PATIENT_LABELS.disclaimer : CLINICIAN_LABELS.disclaimer}
+            {labels.disclaimer}
           </p>
         </footer>
       </main>
