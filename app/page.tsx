@@ -87,8 +87,8 @@ export default function Home() {
 
       <main className="relative z-10">
         {/* ─── HERO ─── */}
-        <section className="mx-auto max-w-3xl px-6 pb-10 pt-20 text-center sm:pt-28">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-slate-50 sm:text-[2.75rem] sm:leading-[1.15]">
+        <section className="mx-auto max-w-3xl px-4 pb-10 pt-20 text-center sm:px-6 sm:pt-28">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl sm:text-[2.75rem] sm:leading-[1.15]">
             A second opinion panel
             <br />
             <span className="text-emerald-400">
@@ -104,14 +104,14 @@ export default function Home() {
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/consult"
-              className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--mp-radius)] bg-emerald-600 px-7 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-500"
+              className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-[var(--mp-radius)] bg-emerald-600 px-7 py-3.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-500 sm:w-auto sm:py-3"
             >
               Start a Consultation
               <ArrowRight size={15} />
             </Link>
             <Link
               href="/consult/demo"
-              className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--mp-radius)] border border-slate-700 px-7 py-3 text-sm font-medium text-slate-300 transition-colors duration-200 hover:border-slate-600 hover:text-slate-100"
+              className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-[var(--mp-radius)] border border-slate-700 px-7 py-3.5 text-sm font-medium text-slate-300 transition-colors duration-200 hover:border-slate-600 hover:text-slate-100 sm:w-auto sm:py-3"
             >
               View Demo Results
             </Link>
@@ -136,7 +136,7 @@ export default function Home() {
             {/* Content — two-column on desktop */}
             <div className="grid bg-[#0d1117] md:grid-cols-[1fr_280px]">
               {/* Left: main results */}
-              <div className="space-y-3 border-r border-slate-800/50 p-4 sm:p-5">
+              <div className="space-y-3 p-4 md:border-r md:border-slate-800/50 sm:p-5">
                 {/* Question */}
                 <div>
                   <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-slate-600">
@@ -167,8 +167,8 @@ export default function Home() {
 
                 {/* Safety */}
                 <div className="rounded-[var(--mp-radius)] border border-orange-500/15 bg-orange-500/[0.04] px-3 py-2">
-                  <p className="flex items-center gap-1.5 text-[10px] font-medium text-orange-400">
-                    <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-orange-500/20 text-[7px] font-bold">
+                  <p className="flex flex-wrap items-center gap-1.5 text-[10px] font-medium text-orange-400">
+                    <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-[7px] font-bold">
                       3
                     </span>
                     Safety Flags
@@ -238,18 +238,20 @@ export default function Home() {
                       key={spec.name}
                       className={`mb-1.5 rounded-[var(--mp-radius)] border border-slate-800/60 border-l-2 ${spec.borderColor} bg-slate-800/20 p-2.5`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className={`rounded-[3px] border px-1.5 py-0.5 text-[8px] font-medium ${spec.badge}`}>
-                            {spec.name}
-                          </span>
-                          <span className="text-[11px] text-slate-300">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="mb-1 flex items-center gap-2">
+                            <span className={`shrink-0 rounded-[3px] border px-1.5 py-0.5 text-[8px] font-medium ${spec.badge}`}>
+                              {spec.name}
+                            </span>
+                            <span className="text-[10px] text-slate-600">
+                              {i === 0 ? "▾" : "▸"}
+                            </span>
+                          </div>
+                          <span className="text-[11px] leading-snug text-slate-300">
                             <span className="font-medium">{spec.headline}</span>
                           </span>
                         </div>
-                        <span className="text-[10px] text-slate-600">
-                          {i === 0 ? "▾" : "▸"}
-                        </span>
                       </div>
                       {i === 0 && (
                         <p className="mt-1.5 text-[10px] leading-relaxed text-slate-500">
@@ -348,7 +350,7 @@ export default function Home() {
         </section>
 
         {/* ─── ENGINE VISUALIZATION (compact) ─── */}
-        <section className="mx-auto max-w-3xl px-6 pb-20 pt-8">
+        <section className="mx-auto max-w-3xl px-4 pb-20 pt-8 sm:px-6">
           <div className="mb-6 text-center">
             <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Under the Hood</p>
             <h2 className="mb-2 text-xl font-bold text-slate-100">Not one AI — a structured panel</h2>
@@ -423,7 +425,7 @@ export default function Home() {
         </section>
 
         {/* ─── SPECIALIST GRID ─── */}
-        <section className="mx-auto max-w-4xl px-6 pb-20 pt-12">
+        <section className="mx-auto max-w-4xl px-4 pb-20 pt-12 sm:px-6">
           <h2 className="mb-1.5 text-center text-xl font-bold text-slate-100">
             Your virtual panel
           </h2>
@@ -456,7 +458,7 @@ export default function Home() {
         </section>
 
         {/* ─── COMPARISON ─── */}
-        <section className="mx-auto max-w-2xl px-6 pb-20">
+        <section className="mx-auto max-w-2xl px-4 pb-20 sm:px-6">
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-[var(--mp-radius)] border border-slate-800 bg-gray-900/60 p-4">
               <div className="mb-3 flex items-center gap-2">
@@ -508,7 +510,7 @@ export default function Home() {
         </section>
 
         {/* ─── WHAT IT IS / IS NOT ─── */}
-        <section className="mx-auto max-w-3xl px-6 pb-16">
+        <section className="mx-auto max-w-3xl px-4 pb-16 sm:px-6">
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-[var(--mp-radius)] border border-slate-800 bg-gray-900/60 p-4">
               <div className="mb-2.5 flex items-center gap-2">
@@ -557,7 +559,7 @@ export default function Home() {
         </section>
 
         {/* ─── FINAL CTA ─── */}
-        <section className="mx-auto max-w-2xl px-6 pb-20 text-center">
+        <section className="mx-auto max-w-2xl px-4 pb-20 text-center sm:px-6">
           <h2 className="mb-2 text-xl font-bold text-slate-100">
             Ready to explore?
           </h2>
@@ -568,14 +570,14 @@ export default function Home() {
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/consult"
-              className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--mp-radius)] bg-emerald-600 px-7 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-500"
+              className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-[var(--mp-radius)] bg-emerald-600 px-7 py-3.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-500 sm:w-auto sm:py-3"
             >
               Start a Consultation
               <ArrowRight size={15} />
             </Link>
             <Link
               href="/consult/demo"
-              className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--mp-radius)] border border-slate-700 px-7 py-3 text-sm font-medium text-slate-300 transition-colors duration-200 hover:border-slate-600 hover:text-slate-100"
+              className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-[var(--mp-radius)] border border-slate-700 px-7 py-3.5 text-sm font-medium text-slate-300 transition-colors duration-200 hover:border-slate-600 hover:text-slate-100 sm:w-auto sm:py-3"
             >
               View Demo Results
             </Link>
@@ -583,7 +585,7 @@ export default function Home() {
         </section>
 
         {/* ─── FOOTER ─── */}
-        <footer className="border-t border-slate-800/50 px-6 py-8">
+        <footer className="border-t border-slate-800/50 px-4 py-8 sm:px-6">
           <div className="mx-auto flex max-w-2xl items-start gap-2.5 justify-center">
             <Shield size={12} className="mt-0.5 shrink-0 text-slate-600" />
             <p className="text-center text-sm leading-relaxed text-slate-500">

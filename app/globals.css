@@ -64,6 +64,7 @@
 
 html {
   color-scheme: dark;
+  overflow-x: hidden;
 }
 
 body {
@@ -74,6 +75,16 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Prevent iOS zoom on input focus — inputs must be >= 16px */
+@media screen and (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
 /* =========================================================

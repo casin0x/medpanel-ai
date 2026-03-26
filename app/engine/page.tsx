@@ -132,7 +132,7 @@ export default function EnginePage() {
                     <span className="text-slate-500">Intent:</span>
                     <span className="rounded bg-blue-500/10 px-1.5 py-0.5 text-blue-400">medication_management</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs sm:gap-2">
                     <span className="text-slate-500">Domains:</span>
                     <span className="rounded bg-pink-500/10 px-1.5 py-0.5 text-pink-400">cardiology</span>
                     <span className="rounded bg-violet-500/10 px-1.5 py-0.5 text-violet-400">nephrology</span>
@@ -166,10 +166,12 @@ export default function EnginePage() {
                     { id: "C-004", title: "CKD progression rate prediction from serial eGFR", pmid: "36129445", delay: 1100 },
                   ].map((study) =>
                     past(TIMINGS.evidenceStart + study.delay) ? (
-                      <div key={study.id} className="flex items-center gap-2 text-[11px]">
-                        <BookOpen size={10} className="shrink-0 text-blue-400" />
-                        <span className="font-mono text-blue-400">[{study.id}]</span>
-                        <span className="text-slate-400">{study.title}</span>
+                      <div key={study.id} className="flex flex-wrap items-start gap-x-2 gap-y-0.5 text-[11px]">
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <BookOpen size={10} className="shrink-0 text-blue-400" />
+                          <span className="font-mono text-blue-400">[{study.id}]</span>
+                        </div>
+                        <span className="min-w-0 text-slate-400">{study.title}</span>
                         <span className="font-mono text-slate-600">PMID:{study.pmid}</span>
                       </div>
                     ) : null
@@ -187,7 +189,7 @@ export default function EnginePage() {
               icon={<Shield size={14} />}
             >
               {past(TIMINGS.specialistsSpawn) && (
-                <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                <div className="mt-3 grid gap-2 grid-cols-1 sm:grid-cols-3">
                   {SPECIALISTS.map((spec, i) => {
                     const doneTime = [TIMINGS.specialist1Done, TIMINGS.specialist2Done, TIMINGS.specialist3Done][i]!;
                     const isDone = past(doneTime);
@@ -249,8 +251,8 @@ export default function EnginePage() {
                             spec.color.split(" ")[0]
                           } border-t-slate-800/30 border-r-slate-800/30 border-b-slate-800/30`}
                         >
-                          <div className="mb-1 flex items-center gap-2">
-                            <span className={`h-1.5 w-1.5 rounded-full ${spec.dot}`} />
+                          <div className="mb-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                            <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${spec.dot}`} />
                             <span className={`text-[10px] font-semibold ${spec.color.split(" ").pop()}`}>
                               {spec.name}
                             </span>
@@ -299,8 +301,8 @@ export default function EnginePage() {
                     past(TIMINGS.consensusStart + i * 500) ? (
                       <div key={i} className="flex items-start gap-2 text-xs">
                         <CheckCircle2 size={12} className="mt-0.5 shrink-0 text-emerald-500" />
-                        <span className="text-slate-300">{item.text}</span>
-                        <span className={`ml-auto shrink-0 rounded px-1 py-0.5 text-[8px] font-medium ${
+                        <span className="min-w-0 flex-1 text-slate-300">{item.text}</span>
+                        <span className={`shrink-0 rounded px-1 py-0.5 text-[8px] font-medium ${
                           item.type === "unanimous" ? "bg-emerald-500/10 text-emerald-400" : "bg-blue-500/10 text-blue-400"
                         }`}>
                           {item.type === "unanimous" ? "3/3" : "2/3"}
@@ -340,11 +342,11 @@ export default function EnginePage() {
                   style={{ width: `${Math.min((now / TIMINGS.outputReady) * 100, 100)}%` }}
                 />
               </div>
-              <div className="mt-1.5 flex justify-between text-[10px] text-slate-600">
-                <span>Classification</span>
+              <div className="mt-1.5 flex justify-between text-[8px] text-slate-600 sm:text-[10px]">
+                <span>Classify</span>
                 <span>Evidence</span>
-                <span>Analysis</span>
-                <span>Discussion</span>
+                <span>Analyze</span>
+                <span>Discuss</span>
                 <span>Consensus</span>
               </div>
             </div>

@@ -42,7 +42,7 @@ export function Nav() {
         {/* Mobile toggle */}
         <button
           type="button"
-          className="cursor-pointer sm:hidden"
+          className="flex h-11 w-11 cursor-pointer items-center justify-center sm:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
@@ -59,21 +59,21 @@ export function Nav() {
         <div className="border-t border-slate-800/60 bg-[#0A0F1C] px-4 pb-4 pt-2 sm:hidden">
           <Link
             href="/consult"
-            className="block rounded py-2 text-sm text-slate-400 transition-colors duration-200 hover:text-slate-50"
+            className="block rounded py-3 text-base text-slate-400 transition-colors duration-200 hover:text-slate-50"
             onClick={() => setMobileOpen(false)}
           >
             Consult
           </Link>
           <Link
             href="/consult/demo"
-            className="block rounded py-2 text-sm text-slate-400 transition-colors duration-200 hover:text-slate-50"
+            className="block rounded py-3 text-base text-slate-400 transition-colors duration-200 hover:text-slate-50"
             onClick={() => setMobileOpen(false)}
           >
             Demo
           </Link>
           <Link
             href="/engine"
-            className="block rounded py-2 text-sm text-slate-400 transition-colors duration-200 hover:text-slate-50"
+            className="block rounded py-3 text-base text-slate-400 transition-colors duration-200 hover:text-slate-50"
             onClick={() => setMobileOpen(false)}
           >
             Engine

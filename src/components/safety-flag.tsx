@@ -79,9 +79,9 @@ export function SafetyFlag({
       >
         <Icon size={18} className={`mt-0.5 shrink-0 ${color}`} />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <span
-              className={`rounded-[var(--mp-radius-sm)] border px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${color} ${border}`}
+              className={`shrink-0 rounded-[var(--mp-radius-sm)] border px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${color} ${border}`}
             >
               {label}
             </span>
@@ -96,7 +96,7 @@ export function SafetyFlag({
       </button>
 
       {expanded && (
-        <div className="border-t border-slate-800/50 px-4 py-3 pl-11">
+        <div className="border-t border-slate-800/50 px-4 py-3 pl-4 sm:pl-11">
           <p className="text-sm leading-relaxed text-slate-300">{description}</p>
           {action && (
             <div className="mt-2 flex items-start gap-2">

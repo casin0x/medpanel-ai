@@ -339,7 +339,7 @@ function DisagreementCard({
                 )}
               </button>
               {isExpanded && (
-                <div className="border-t border-slate-800/30 px-4 py-3 pl-7">
+                <div className="border-t border-slate-800/30 px-4 py-3 sm:pl-7">
                   <p className="text-sm leading-relaxed text-slate-400">
                     {p.reasoning}
                   </p>
@@ -407,7 +407,7 @@ function EvidenceSection({
                         <p className="text-sm text-slate-300">
                           {item.claim}
                         </p>
-                        <div className="mt-1 flex items-center gap-2">
+                        <div className="mt-1 flex flex-wrap items-center gap-2">
                           <span className="text-xs text-slate-500">
                             {item.source}
                           </span>
@@ -416,7 +416,7 @@ function EvidenceSection({
                               href={`https://pubmed.ncbi.nlm.nih.gov/${item.pmid}/`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex cursor-pointer items-center gap-1 font-mono text-xs text-blue-400 transition-colors duration-200 hover:text-blue-300"
+                              className="inline-flex cursor-pointer items-center gap-1 py-1 font-mono text-xs text-blue-400 transition-colors duration-200 hover:text-blue-300"
                             >
                               PMID:{item.pmid}
                               <ExternalLink size={10} />
@@ -539,7 +539,7 @@ export default function ConsultResultPage() {
         {/* Back link */}
         <Link
           href="/consult"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors duration-200 hover:text-slate-300"
+          className="mb-6 inline-flex items-center gap-1.5 py-2 text-sm text-slate-500 transition-colors duration-200 hover:text-slate-300"
         >
           <ArrowLeft size={14} />
           Back to Consult
@@ -618,7 +618,7 @@ export default function ConsultResultPage() {
 
         {/* ---- Questions Section (mode-aware) ---- */}
         <section className="mb-8">
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <SectionHeader
               icon={
                 <Stethoscope size={18} className="text-emerald-400" />
@@ -629,7 +629,7 @@ export default function ConsultResultPage() {
             <button
               type="button"
               onClick={handleCopyAll}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-[var(--mp-radius)] border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-300 transition-colors duration-200 hover:border-slate-600 hover:text-slate-100"
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-[var(--mp-radius)] border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-medium text-slate-300 transition-colors duration-200 hover:border-slate-600 hover:text-slate-100"
             >
               {copied ? (
                 <>

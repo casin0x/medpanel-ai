@@ -38,11 +38,11 @@ export function QuestionCard({
             {whyAsk && (
               <button
                 type="button"
-                className="inline-flex cursor-pointer items-center gap-1 rounded-[var(--mp-radius-sm)] px-2 py-1 text-xs text-slate-400 transition-colors duration-200 hover:bg-slate-800 hover:text-slate-300"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-[var(--mp-radius-sm)] px-2.5 py-2 text-xs text-slate-400 transition-colors duration-200 hover:bg-slate-800 hover:text-slate-300"
                 onClick={() => setWhyExpanded(!whyExpanded)}
                 aria-expanded={whyExpanded}
               >
-                <HelpCircle size={12} />
+                <HelpCircle size={14} className="shrink-0" />
                 Why ask this
                 {whyExpanded ? (
                   <ChevronUp size={12} />
@@ -54,11 +54,11 @@ export function QuestionCard({
             {whatToListen && (
               <button
                 type="button"
-                className="inline-flex cursor-pointer items-center gap-1 rounded-[var(--mp-radius-sm)] px-2 py-1 text-xs text-slate-400 transition-colors duration-200 hover:bg-slate-800 hover:text-slate-300"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-[var(--mp-radius-sm)] px-2.5 py-2 text-xs text-slate-400 transition-colors duration-200 hover:bg-slate-800 hover:text-slate-300"
                 onClick={() => setListenExpanded(!listenExpanded)}
                 aria-expanded={listenExpanded}
               >
-                <Stethoscope size={12} />
+                <Stethoscope size={14} className="shrink-0" />
                 What to listen for
                 {listenExpanded ? (
                   <ChevronUp size={12} />

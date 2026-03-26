@@ -93,7 +93,7 @@ export default function ConsultInputPage() {
             </div>
             <Link
               href="/profile"
-              className="cursor-pointer rounded-[var(--mp-radius-sm)] border border-slate-700 px-2.5 py-1 text-[11px] text-slate-400 transition-colors duration-200 hover:border-slate-600 hover:text-slate-200"
+              className="cursor-pointer rounded-[var(--mp-radius-sm)] border border-slate-700 px-3 py-2 text-xs text-slate-400 transition-colors duration-200 hover:border-slate-600 hover:text-slate-200"
             >
               Edit Profile
             </Link>
@@ -160,15 +160,15 @@ export default function ConsultInputPage() {
         <div className="mb-6">
           <button
             type="button"
-            className="flex cursor-pointer items-center gap-1.5 text-xs text-slate-500 transition-colors duration-200 hover:text-slate-300"
+            className="flex cursor-pointer items-center gap-1.5 py-2 text-sm text-slate-500 transition-colors duration-200 hover:text-slate-300 sm:text-xs"
             onClick={() => setExamplesOpen(!examplesOpen)}
           >
-            <Sparkles size={12} />
+            <Sparkles size={14} className="sm:h-3 sm:w-3" />
             Example questions
             {examplesOpen ? (
-              <ChevronUp size={12} />
+              <ChevronUp size={14} className="sm:h-3 sm:w-3" />
             ) : (
-              <ChevronDown size={12} />
+              <ChevronDown size={14} className="sm:h-3 sm:w-3" />
             )}
           </button>
 
@@ -178,7 +178,7 @@ export default function ConsultInputPage() {
                 <button
                   key={eq}
                   type="button"
-                  className="block w-full cursor-pointer rounded-[var(--mp-radius-sm)] px-3 py-2 text-left text-sm text-slate-400 transition-colors duration-200 hover:bg-slate-800/60 hover:text-slate-200"
+                  className="block w-full cursor-pointer rounded-[var(--mp-radius-sm)] px-3 py-3 text-left text-sm text-slate-400 transition-colors duration-200 hover:bg-slate-800/60 hover:text-slate-200 sm:py-2"
                   onClick={() => {
                     setQuestion(eq);
                     setIsTyping(false);
