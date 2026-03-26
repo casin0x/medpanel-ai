@@ -38,11 +38,11 @@ const TIMELINE = [
   { month: "0-2", title: "Ship MVP", desc: "Wire real AI pipeline — specialist agents running live consultations with PubMed evidence. File provisional patent.", status: "building" },
   { month: "2-4", title: "Get 50+ Doctor Users", desc: "Targeted outreach, not ads. Medical Twitter/X, Doximity forums, podcast appearances. Collect testimonials.", status: "planned" },
   { month: "3-5", title: "Approach Buyers", desc: "Direct outreach to 5-10 strategic buyers. Demo walkthrough. Create competitive tension with parallel conversations.", status: "planned" },
-  { month: "4-8", title: "Negotiate + Close", desc: "At $1-5M, this is a VP-level budget decision — not a board vote. Simple asset purchase agreement.", status: "planned" },
+  { month: "4-8", title: "Negotiate + Close", desc: "At $1-2M, this is a VP-level budget decision — not a board vote. Simple asset purchase agreement.", status: "planned" },
 ];
 
 const BUYERS = [
-  { name: "Doximity", why: "80% of US doctors on platform. Paid $63M for Pathway (clinical AI). $1-5M is pocket change.", mcap: "$8B" },
+  { name: "Doximity", why: "80% of US doctors on platform. Paid $63M for Pathway (clinical AI). $1-2M is a rounding error.", mcap: "$8B" },
   { name: "Wolters Kluwer", why: "UpToDate is their #1 product. Multi-specialist AI is a defensive play against OpenEvidence.", mcap: "$40B" },
   { name: "Elsevier", why: "ClinicalKey AI expanding. 300+ hospitals to cross-sell. Need multi-specialist differentiation.", mcap: "$40B+" },
   { name: "OpenEvidence", why: "Cross-examination protocol is the one feature they don't have. $700M raised, $12B valuation.", mcap: "$12B" },
@@ -51,10 +51,11 @@ const BUYERS = [
 ];
 
 const RISKS = [
-  { risk: "No buyer at target price", likelihood: "Low (25%)", mitigation: "Multiple parallel conversations. IP is real, market is hot, price is cheap for these companies." },
-  { risk: "Takes longer than planned", likelihood: "Medium (40%)", mitigation: "Reserve fund covers 6 extra months. Corporate BD is slow — budgeted for it." },
-  { risk: "Buyer lowballs below $1M", likelihood: "Medium (30%)", mitigation: "Walk-away power. 2+ conversations create leverage. Patent pending adds floor." },
-  { risk: "MVP doesn't resonate with doctors", likelihood: "Low (20%)", mitigation: "Already validated with real consultation data. Demo is live at medpanel.ai." },
+  { risk: "No buyer within 12 months", likelihood: "Medium (30%)", mitigation: "Corporate BD moves slow. Reserve fund extends runway to 18 months. Fallback: pivot to SaaS subscription model." },
+  { risk: "Sale price below $1M", likelihood: "Medium (35%)", mitigation: "2x liquidation preference protects investor even at $500K sale. Multiple parallel buyer conversations create leverage." },
+  { risk: "Competitor builds similar feature", likelihood: "Medium (40%)", mitigation: "This is why we sell fast, not build for years. 12-18 month window. Patent pending adds friction." },
+  { risk: "Doctors don't engage with product", likelihood: "Low-Medium (25%)", mitigation: "Validated with real consultation data. If organic adoption is slow, budget includes $20-30K for targeted SEM to test demand." },
+  { risk: "LLM costs increase or APIs change", likelihood: "Low (15%)", mitigation: "Multi-provider architecture. Claude, GPT-4.1, and Gemini as fallbacks. Margins at 85%+ absorb 2-3x cost increase." },
 ];
 
 /* ──────────────────────────────────────────────
@@ -79,14 +80,14 @@ export default function InvestorPage() {
           </h1>
           <p className="mb-6 max-w-xl text-base leading-relaxed text-slate-400">
             Raise SEK 1-2M (~$100-200K). Build the product. Sell the IP to a strategic
-            buyer within 6-12 months. Clean exit at $1-5M.
+            buyer within 6-12 months. Clean exit at $1-2M.
           </p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {[
               { label: "Raise", value: "$100-200K" },
               { label: "Timeline", value: "6-12 mo" },
-              { label: "Target Exit", value: "$1-5M" },
-              { label: "Investor ROI", value: "3-10x" },
+              { label: "Target Exit", value: "$1-2M" },
+              { label: "Investor ROI", value: "3-7x" },
             ].map((s) => (
               <div key={s.label} className="rounded-[var(--mp-radius)] border border-slate-800 bg-gray-900/80 px-3 py-2.5">
                 <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">{s.label}</p>
@@ -155,8 +156,68 @@ export default function InvestorPage() {
             </p>
             <p className="text-sm leading-relaxed text-slate-300">
               For a company like Wolters Kluwer ($40B market cap), Doximity ($8B), or Elsevier ($40B+),
-              buying this IP for $1-5M is cheaper and faster than building it themselves. It&rsquo;s a
+              buying this IP for $1-2M is cheaper and faster than building it themselves. Building
+              an equivalent would cost $500K-$1M in engineering alone plus 6-12 months. It&rsquo;s a
               feature acquisition — a VP-level budget decision, not a board vote.
+            </p>
+          </div>
+        </section>
+
+        {/* ─── UNIT ECONOMICS ─── */}
+        <section className="mb-10">
+          <SectionTitle icon={<DollarSign size={16} />} title="Unit Economics Per Consultation" />
+          <div className="rounded-[var(--mp-radius)] border border-slate-800 bg-gray-900/80 p-4">
+            <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {[
+                { label: "LLM calls per consult", value: "5-7", sub: "3 specialists + moderator + classifier + evidence" },
+                { label: "Cost per consult", value: "$0.30-0.80", sub: "Claude Opus specialists, Haiku classifier" },
+                { label: "D2C price", value: "$5-15", sub: "Per consultation" },
+                { label: "Gross margin", value: "85-94%", sub: "At $5-15 price point" },
+              ].map((e) => (
+                <div key={e.label} className="rounded-[var(--mp-radius-sm)] bg-slate-800/60 px-3 py-2">
+                  <p className="text-[10px] text-slate-500">{e.label}</p>
+                  <p className="font-mono text-sm font-semibold text-slate-100">{e.value}</p>
+                  <p className="text-[10px] text-slate-500">{e.sub}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs leading-relaxed text-slate-400">
+              Cost breakdown: Claude Opus (specialists) ~$0.05-0.15 per call, Haiku (classifier) ~$0.001,
+              PubMed API (free with key). 5-7 calls per full consultation = $0.30-0.80 total.
+              At even the lowest D2C price of $5, gross margin exceeds 85%.
+              For B2B enterprise at $200-500/seat/year with moderate usage, margins approach 90%+.
+            </p>
+          </div>
+        </section>
+
+        {/* ─── DEFENSIBILITY WINDOW ─── */}
+        <section className="mb-10">
+          <SectionTitle icon={<Shield size={16} />} title="Defensibility &amp; Timing" />
+          <div className="rounded-[var(--mp-radius)] border border-amber-500/15 bg-amber-500/[0.04] p-4">
+            <p className="mb-2 text-sm font-medium text-amber-300">Honest question: what stops OpenEvidence from building this?</p>
+            <p className="mb-3 text-xs leading-relaxed text-slate-400">
+              Nothing, eventually. A well-funded competitor could build multi-specialist
+              cross-examination in 3-6 months. That&rsquo;s exactly why this is a quick-flip play,
+              not a &ldquo;build for 5 years&rdquo; company. The window is 12-18 months where:
+            </p>
+            <div className="space-y-1.5">
+              {[
+                "Nobody has shipped multi-specialist cross-examination yet — we're first to market with a working product",
+                "Strategic buyers are actively acquiring health AI features (195 deals in 2025)",
+                "Building internally costs more and takes longer than buying for $1-2M",
+                "Patent pending (provisional filing) adds legal friction to replication",
+                "The protocol specification (2,299 lines) represents 6+ months of clinical design work",
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-2 text-xs">
+                  <span className="mt-[5px] h-1 w-1 shrink-0 rounded-full bg-amber-400/60" />
+                  <span className="text-slate-300">{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-slate-500">
+              This is a timing play, not a moat play. The value is in being first with a working
+              product at the exact moment buyers are looking. Speed to sale matters more than
+              long-term defensibility.
             </p>
           </div>
         </section>
@@ -235,7 +296,7 @@ export default function InvestorPage() {
         <section className="mb-10">
           <SectionTitle icon={<Building2 size={16} />} title="Target Buyers" />
           <p className="mb-3 text-sm text-slate-400">
-            At $1-5M, these companies buy features and IP — not companies. This is a product budget decision.
+            At $1-2M, these companies buy features and IP — not companies. This is a product budget decision.
           </p>
           <div className="space-y-2">
             {BUYERS.map((b) => (
@@ -254,7 +315,7 @@ export default function InvestorPage() {
         <section className="mb-10">
           <SectionTitle icon={<TrendingUp size={16} />} title="Return Scenarios" />
           <p className="mb-3 text-sm text-slate-400">
-            Based on $150K investment (midpoint). Investor gets preferred return before founder split.
+            Based on $150K investment at 20% equity with 2x liquidation preference.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -262,30 +323,51 @@ export default function InvestorPage() {
                 <tr className="border-b border-slate-800 text-left text-[10px] font-medium uppercase tracking-wider text-slate-500">
                   <th className="pb-2 pr-4">Scenario</th>
                   <th className="pb-2 pr-4">Sale Price</th>
-                  <th className="pb-2 pr-4">Investor Return</th>
-                  <th className="pb-2">Multiple</th>
+                  <th className="pb-2 pr-4">Investor Gets</th>
+                  <th className="pb-2 pr-4">Multiple</th>
+                  <th className="pb-2">Founder Gets</th>
                 </tr>
               </thead>
               <tbody className="text-slate-300">
                 {[
-                  { scenario: "Conservative", price: "$1M", ret: "$300-400K", mult: "2-2.7x" },
-                  { scenario: "Base case", price: "$2-3M", ret: "$600K-$1M", mult: "4-6.7x" },
-                  { scenario: "Upside", price: "$5M", ret: "$1.5-2M", mult: "10-13x" },
-                  { scenario: "Downside", price: "No sale", ret: "IP + product retained", mult: "—" },
+                  { scenario: "Downside", price: "$500K", inv: "$300K", mult: "2x", founder: "$200K" },
+                  { scenario: "Conservative", price: "$1M", inv: "$440K", mult: "2.9x", founder: "$560K" },
+                  { scenario: "Base case", price: "$1.5M", inv: "$540K", mult: "3.6x", founder: "$960K" },
+                  { scenario: "Upside", price: "$2M", inv: "$640K", mult: "4.3x", founder: "$1.36M" },
+                  { scenario: "No sale", price: "—", inv: "Retains 20% equity", mult: "—", founder: "Retains 80%" },
                 ].map((r) => (
                   <tr key={r.scenario} className="border-b border-slate-800/50">
                     <td className="py-2.5 pr-4 font-medium">{r.scenario}</td>
                     <td className="py-2.5 pr-4 font-mono text-emerald-400">{r.price}</td>
-                    <td className="py-2.5 pr-4">{r.ret}</td>
-                    <td className="py-2.5 font-mono">{r.mult}</td>
+                    <td className="py-2.5 pr-4">{r.inv}</td>
+                    <td className="py-2.5 pr-4 font-mono">{r.mult}</td>
+                    <td className="py-2.5 text-slate-400">{r.founder}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
+          {/* Waterfall example */}
+          <div className="mt-4 rounded-[var(--mp-radius)] border border-slate-800 bg-gray-900/60 p-3">
+            <p className="mb-2 text-xs font-medium text-slate-300">Waterfall example: $1.5M sale (base case)</p>
+            <div className="space-y-1 font-mono text-xs text-slate-400">
+              <p>Sale proceeds: <span className="text-slate-200">$1,500,000</span></p>
+              <p>Step 1 — Investor 2x preference: <span className="text-emerald-400">-$300,000</span> (2x of $150K)</p>
+              <p>Remaining: <span className="text-slate-200">$1,200,000</span></p>
+              <p>Step 2 — Investor 20% of remaining: <span className="text-emerald-400">-$240,000</span></p>
+              <p>Step 3 — Founder 80% of remaining: <span className="text-slate-200">$960,000</span></p>
+              <p className="border-t border-slate-800 pt-1">
+                Investor total: <span className="text-emerald-400">$540,000</span> (3.6x) &middot;
+                Founder total: <span className="text-slate-200">$960,000</span>
+              </p>
+            </div>
+          </div>
+
           <p className="mt-3 text-xs text-slate-500">
-            Downside protection: if no sale occurs, investor retains pro-rata equity in the
-            company and the product continues generating value. The IP doesn&rsquo;t expire.
+            Downside protection: even at a $500K sale (fire sale), investor gets 2x return ($300K).
+            If no sale occurs, investor retains 20% equity in a company with real IP, working product,
+            and doctor user base. The product can pivot to SaaS subscription.
           </p>
         </section>
 
@@ -358,7 +440,7 @@ export default function InvestorPage() {
             <strong className="text-slate-200">Recommendation:</strong> Start as Swedish AB. It&rsquo;s
             cheaper, simpler, and tax-efficient for the founder. An asset purchase (IP sale) works
             regardless of jurisdiction — Doximity or Wolters Kluwer can buy Swedish IP just as easily.
-            Only incorporate in Delaware if a specific buyer requires it, which is rare for sub-$5M deals.
+            Only incorporate in Delaware if a specific buyer requires it, which is rare for sub-$2M deals.
           </p>
         </section>
 
@@ -403,7 +485,7 @@ export default function InvestorPage() {
                 <span className="mt-0.5 font-mono text-xs text-slate-500">03</span>
                 <div>
                   <p className="font-medium text-slate-200">Liquidation preference: 1.5-2x</p>
-                  <p className="text-xs text-slate-400">Investor gets 1.5-2x their money back before any founder distribution. On a $2M sale with $150K invested at 2x, investor gets $300K first, remaining $1.7M split by equity.</p>
+                  <p className="text-xs text-slate-400">Investor gets 2x their money back before any remaining proceeds are split by equity. See waterfall example in Return Scenarios below.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
