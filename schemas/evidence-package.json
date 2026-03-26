@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence-package.json",
+  "title": "MedPanel Evidence Package",
+  "description": "Complete evidence bundle assembled by the retrieval pipeline, distributed to specialist agents. Based on EVIDENCE-PIPELINE.md Section 6. All enums via $ref to shared-definitions.json. This is what agents receive as their {evidence_package} input.",
+  "type": "object",
+  "required": ["package_id", "consultation_id", "generated_at", "retrieval_status", "shared_evidence", "drug_interactions"],
+  "properties": {
+
+    "package_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+
+    "consultation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "retrieval_status": {
+      "type": "object",
+      "description": "Health status of each pipeline step. Sent to ALL agents so they know what evidence is missing.",
+      "required": ["overall"],
+      "properties": {
+        "overall": { "$ref": "shared-definitions.json#/$defs/retrieval_overall_status" },
+        "perplexity": { "$ref": "shared-definitions.json#/$defs/retrieval_step_status" },
+        "pubmed_verification": { "$ref": "shared-definitions.json#/$defs/retrieval_step_status" },
+        "drugbank": { "$ref": "shared-definitions.json#/$defs/retrieval_step_status" },
+        "rxnorm": { "$ref": "shared-definitions.json#/$defs/retrieval_step_status" },
+        "natural_medicines": { "$ref": "shared-definitions.json#/$defs/retrieval_step_status" },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step": { "type": "string" },
+              "error": { "type": "string" },
+              "fallback_used": { "type": "string" }
+            }
+          }
+        },
+        "wall_clock_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total pipeline execution time in milliseconds. Target < 15000."
+        }
+      }
+    },
+
+    "shared_evidence": {
+      "type": "object",
+      "description": "Evidence from the shared query. Sent to ALL specialist agents.",
+      "properties": {
+        "query_used": { "type": "string" },
+        "summary": {
+          "type": "string",
+          "description": "Perplexity's synthesized evidence summary"
+        },
+        "citations": {
+          "type": "array",
+          "items": { "$ref": "shared-definitions.json#/$defs/citation" }
+        },
+        "guidelines": {
+          "type": "array",
+          "items": { "$ref": "shared-definitions.json#/$defs/guideline" }
+        },
+        "evidence_gaps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What is NOT well-studied or where evidence is conflicting"
+        }
+      }
+    },
+
+    "specialist_evidence": {
+      "type": "object",
+      "description": "Evidence from specialist-specific queries. Keyed by specialist_type. Only the matching specialist receives their portion.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "query_used": { "type": "string" },
+          "summary": { "type": "string" },
+          "citations": {
+            "type": "array",
+            "items": { "$ref": "shared-definitions.json#/$defs/citation" }
+          },
+          "guidelines": {
+            "type": "array",
+            "items": { "$ref": "shared-definitions.json#/$defs/guideline" }
+          },
+          "evidence_gaps": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "drug_interactions": {
+      "type": "object",
+      "description": "Complete interaction check results. Sent to ALL agents (pharmacologist gets full detail, others get summary + critical items).",
+      "properties": {
+        "medications_checked": {
+          "type": "array",
+          "items": { "$ref": "shared-definitions.json#/$defs/medication" }
+        },
+        "interactions_found": {
+          "type": "array",
+          "items": { "$ref": "shared-definitions.json#/$defs/interaction" }
+        },
+        "pairs_with_no_data": {
+          "type": "array",
+          "description": "Medication pairs where no interaction data was found in any source",
+          "items": {
+            "type": "object",
+            "properties": {
+              "drug_a": { "type": "string" },
+              "drug_b": { "type": "string" },
+              "sources_checked": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "critical_interactions_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_interactions_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+
+    "token_budget": {
+      "type": "object",
+      "description": "Token usage tracking to ensure the package fits within agent context limits. Target: < 8000 tokens per agent.",
+      "properties": {
+        "total_tokens_estimated": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Estimated token count of the full evidence package"
+        },
+        "shared_evidence_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "specialist_evidence_tokens": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "Token count per specialist section"
+        },
+        "drug_interactions_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "truncated": {
+          "type": "boolean",
+          "description": "Whether evidence was truncated to fit context window"
+        },
+        "truncation_strategy": {
+          "type": "string",
+          "description": "If truncated, what was removed (lowest-quality citations first)"
+        }
+      }
+    }
+  }
+}

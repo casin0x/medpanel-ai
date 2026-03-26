@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/* =========================================================
+   MedPanel AI — Design System
+   Dark mode primary. Clinical precision + modern elegance.
+   ========================================================= */
+
+:root {
+  /* Background */
+  --mp-bg: #0A0F1C;
+  --mp-surface: #111827;
+  --mp-surface-elevated: #1F2937;
+
+  /* Borders */
+  --mp-border: #1E293B;
+  --mp-border-hover: #334155;
+
+  /* Text */
+  --mp-text-primary: #F8FAFC;
+  --mp-text-secondary: #94A3B8;
+  --mp-text-muted: #64748B;
+
+  /* Accent */
+  --mp-accent-primary: #10B981;
+  --mp-accent-warning: #F59E0B;
+  --mp-accent-danger: #F87171;
+  --mp-accent-info: #3B82F6;
+
+  /* Specialist Colors */
+  --mp-specialist-cardio: #EC4899;
+  --mp-specialist-nephro: #8B5CF6;
+  --mp-specialist-fm: #14B8A6;
+  --mp-specialist-neuro: #F97316;
+  --mp-specialist-endo: #06B6D4;
+  --mp-specialist-pharma: #A855F7;
+
+  /* Evidence Tiers */
+  --mp-evidence-strong: #10B981;
+  --mp-evidence-moderate: #3B82F6;
+  --mp-evidence-preliminary: #F59E0B;
+  --mp-evidence-mechanistic: #64748B;
+  --mp-evidence-expert: #A855F7;
+  --mp-evidence-insufficient: #6B7280;
+
+  /* Safety */
+  --mp-safety-critical: #EF4444;
+  --mp-safety-high: #F97316;
+  --mp-safety-moderate: #F59E0B;
+  --mp-safety-low: #3B82F6;
+  --mp-safety-info: #64748B;
+
+  /* Radii */
+  --mp-radius: 6px;
+  --mp-radius-sm: 4px;
+
+  /* Transitions */
+  --mp-transition: 200ms ease;
+}
+
+/* =========================================================
+   Base Styles
+   ========================================================= */
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--mp-bg);
+  color: var(--mp-text-primary);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================================
+   Typography
+   ========================================================= */
+
+.font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* =========================================================
+   Specialist Color Utilities
+   ========================================================= */
+
+.specialist-cardiologist { color: var(--mp-specialist-cardio); }
+.specialist-nephrologist { color: var(--mp-specialist-nephro); }
+.specialist-functional_medicine { color: var(--mp-specialist-fm); }
+.specialist-neuropsychiatrist { color: var(--mp-specialist-neuro); }
+.specialist-endocrinologist { color: var(--mp-specialist-endo); }
+.specialist-pharmacologist { color: var(--mp-specialist-pharma); }
+
+.specialist-bg-cardiologist { background-color: color-mix(in srgb, var(--mp-specialist-cardio) 12%, transparent); }
+.specialist-bg-nephrologist { background-color: color-mix(in srgb, var(--mp-specialist-nephro) 12%, transparent); }
+.specialist-bg-functional_medicine { background-color: color-mix(in srgb, var(--mp-specialist-fm) 12%, transparent); }
+.specialist-bg-neuropsychiatrist { background-color: color-mix(in srgb, var(--mp-specialist-neuro) 12%, transparent); }
+.specialist-bg-endocrinologist { background-color: color-mix(in srgb, var(--mp-specialist-endo) 12%, transparent); }
+.specialist-bg-pharmacologist { background-color: color-mix(in srgb, var(--mp-specialist-pharma) 12%, transparent); }
+
+.specialist-border-cardiologist { border-color: var(--mp-specialist-cardio); }
+.specialist-border-nephrologist { border-color: var(--mp-specialist-nephro); }
+.specialist-border-functional_medicine { border-color: var(--mp-specialist-fm); }
+.specialist-border-neuropsychiatrist { border-color: var(--mp-specialist-neuro); }
+.specialist-border-endocrinologist { border-color: var(--mp-specialist-endo); }
+.specialist-border-pharmacologist { border-color: var(--mp-specialist-pharma); }
+
+/* =========================================================
+   Scrollbar
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mp-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mp-border-hover);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mp-text-muted);
+}
+
+/* =========================================================
+   Focus Styles
+   ========================================================= */
+
+*:focus-visible {
+  outline: 2px solid var(--mp-accent-primary);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   Background Pattern (Grid Dots)
+   ========================================================= */
+
+.bg-grid-pattern {
+  background-image: radial-gradient(circle, var(--mp-border) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* =========================================================
+   Selection
+   ========================================================= */
+
+::selection {
+  background-color: color-mix(in srgb, var(--mp-accent-primary) 30%, transparent);
+  color: var(--mp-text-primary);
+}
+
+/* =========================================================
+   Reduced Motion
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

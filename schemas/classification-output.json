@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "classification-output.json",
+  "title": "MedPanel Classification Output",
+  "description": "Structured output of the classifier agent (Haiku). Based on QUESTION-CLASSIFICATION.md. Produces the 3-axis classification + complexity subscores that drive specialist selection, model tier assignment, and budget allocation. All enums via $ref to shared-definitions.json.",
+  "type": "object",
+  "required": ["intent", "organ_systems", "urgency", "diagnostic_uncertainty", "treatment_conflict", "reasoning_brief"],
+  "properties": {
+
+    "intent": { "$ref": "shared-definitions.json#/$defs/consultation_type" },
+
+    "organ_systems": {
+      "type": "array",
+      "description": "Ordered by relevance. First = primary domain = lead specialist. 1-5 domains.",
+      "items": { "$ref": "shared-definitions.json#/$defs/domain" },
+      "minItems": 1,
+      "maxItems": 5
+    },
+
+    "urgency": { "$ref": "shared-definitions.json#/$defs/urgency" },
+
+    "diagnostic_uncertainty": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "How ambiguous is the clinical picture? 0 = crystal clear, 10 = completely unclear."
+    },
+
+    "treatment_conflict": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Do conditions/medications create competing treatment considerations? 0 = no conflicts, 10 = severe conflicts."
+    },
+
+    "reasoning_brief": {
+      "type": "string",
+      "description": "One sentence explaining the classification logic. Required for audit trail."
+    },
+
+    "complexity_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Computed from the 5-factor formula in QUESTION-CLASSIFICATION.md Section 2. May be computed server-side from the subscores rather than by the LLM."
+    },
+
+    "specialists_selected": {
+      "type": "array",
+      "description": "Selected panel after applying DOMAIN_TO_SPECIALIST mapping, cross-domain rules, and MAX_SPECIALISTS cap. Internist is always first.",
+      "items": { "$ref": "shared-definitions.json#/$defs/specialist_type" },
+      "minItems": 2,
+      "maxItems": 6
+    },
+
+    "model_assignment": {
+      "type": "object",
+      "description": "Maps each specialist to their model tier. Based on complexity score thresholds.",
+      "additionalProperties": { "$ref": "shared-definitions.json#/$defs/model_tier" }
+    },
+
+    "secondary_domains": {
+      "type": "array",
+      "description": "Domains that are relevant but not primary. Influences evidence queries but may not add a specialist.",
+      "items": { "$ref": "shared-definitions.json#/$defs/domain" }
+    },
+
+    "emergency_detected": {
+      "type": "boolean",
+      "description": "If true, classification is aborted and the safety system takes over."
+    },
+
+    "emergency_response": {
+      "type": "string",
+      "description": "If emergency_detected, the immediate response shown to user."
+    },
+
+    "safety_system_flags": {
+      "type": "object",
+      "description": "Flags carried forward from the safety pre-check. The classifier cannot downgrade urgency below these.",
+      "properties": {
+        "pre_check_result": {
+          "type": "string",
+          "enum": ["no_flags", "true_urgent", "true_emergency", "false_positive"]
+        },
+        "minimum_urgency": { "$ref": "shared-definitions.json#/$defs/urgency" }
+      }
+    },
+
+    "routing_modifiers": {
+      "type": "object",
+      "description": "Patient context modifiers that influence routing. From QUESTION-CLASSIFICATION.md Section 3.",
+      "properties": {
+        "polypharmacy": {
+          "type": "boolean",
+          "description": "True when active medications >= 6. Forces clinical_pharmacologist."
+        },
+        "geriatric": {
+          "type": "boolean",
+          "description": "True when age >= 65. May add geriatrician."
+        },
+        "pregnancy": {
+          "type": "boolean",
+          "description": "True when active pregnancy detected. Forces obstetrician."
+        },
+        "narrow_therapeutic_index": {
+          "type": "boolean",
+          "description": "True when patient takes warfarin, lithium, digoxin, etc."
+        },
+        "high_supplement_count": {
+          "type": "boolean",
+          "description": "True when supplement count >= 5."
+        }
+      }
+    },
+
+    "budget_tier": {
+      "type": "object",
+      "description": "Assigned budget based on complexity_score. Simple: 0.0-2.5 ($5), Moderate: 2.6-6.5 ($15), Complex: 6.6-10.0 ($25).",
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["simple", "moderate", "complex"]
+        },
+        "max_cost_usd": { "type": "number" },
+        "max_total_tokens": { "type": "integer" },
+        "max_rounds": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 3
+        }
+      }
+    }
+  }
+}

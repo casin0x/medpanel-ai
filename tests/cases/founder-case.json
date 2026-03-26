@@ -1,0 +1,95 @@
+{
+  "demographics": {
+    "age": 30,
+    "sex": "male",
+    "height_cm": 175,
+    "weight_kg": 77,
+    "body_fat_percentage": 15
+  },
+  "chief_complaint": "Should I take CoQ10 at 200mg daily for my mitochondrial issues? My OAT shows cis-aconitic acid at 65 (range 10-36). I'm on TRT and have kidney concerns.",
+  "conditions": [
+    { "name": "Hypogonadism", "status": "active", "notes": "On TRT" },
+    { "name": "Autonomic dysregulation", "status": "active", "notes": "Post-benzo, 6 months sober" },
+    { "name": "Complex PTSD", "status": "active", "notes": "Arousal-contingent, social-specific" },
+    { "name": "Mitochondrial strain", "status": "active", "notes": "OAT: cis-aconitic acid 65 (range 10-36)" },
+    { "name": "Gut dysbiosis", "status": "active", "notes": "OAT: p-hydroxyphenylacetic 6.23 (ref ≤3.9)" }
+  ],
+  "medications": [
+    { "name": "Testosterone enanthate", "type": "prescription", "dose": "75mg/week", "frequency": "Mon/Wed/Fri IM", "route": "injection_im", "status": "active", "prescribing_reason": "Hypogonadism" },
+    { "name": "Metoprolol", "type": "prn", "dose": "6.25mg", "frequency": "As needed before gym", "route": "oral", "status": "active", "prescribing_reason": "Sympathetic overshoot" },
+    { "name": "Propranolol", "type": "prn", "dose": "5-10mg", "frequency": "As needed before meetings", "route": "oral", "status": "active", "prescribing_reason": "Social anxiety" }
+  ],
+  "supplements": [
+    { "name": "Ubiquinol (CoQ10)", "dose": "100mg", "frequency": "daily with food" },
+    { "name": "ALCAR", "dose": "1000mg", "frequency": "morning empty stomach" },
+    { "name": "Magnesium glycinate", "dose": "200mg", "frequency": "bedtime" },
+    { "name": "NAC", "dose": "750mg", "frequency": "bedtime" },
+    { "name": "Omega-3", "dose": "2 softgels", "frequency": "with food" },
+    { "name": "Vitamin D3", "dose": "8000 IU", "frequency": "with food" },
+    { "name": "Vitamin K2 MK-7", "dose": "200mcg", "frequency": "with D3" },
+    { "name": "Creatine", "dose": "2.5g", "frequency": "morning" },
+    { "name": "Glycine", "dose": "3g", "frequency": "bedtime" },
+    { "name": "Taurine", "dose": "2000mg", "frequency": "1000mg AM + 1000mg PM" },
+    { "name": "L-Glutamine", "dose": "2.5g", "frequency": "morning empty stomach" },
+    { "name": "Collagen", "dose": "7.5g", "frequency": "with food" },
+    { "name": "Vitamin C", "dose": "500mg", "frequency": "with food" },
+    { "name": "Lion's Mane", "dose": "500mg", "frequency": "with food" },
+    { "name": "S. boulardii", "dose": "1 cap", "frequency": "with food" },
+    { "name": "Jarro-Dophilus", "dose": "2 caps", "frequency": "with food" },
+    { "name": "B-Complex (Thorne Basic)", "dose": "1 cap", "frequency": "with breakfast" },
+    { "name": "L-Theanine", "dose": "75mg", "frequency": "with coffee" }
+  ],
+  "allergies": [
+    { "substance": "Cow's milk", "type": "allergy", "severity": "moderate", "reaction": "Bloating, GI distress", "ige_level": 0.74 }
+  ],
+  "lab_results": [
+    { "name": "Testosterone", "value": 8.48, "unit": "ng/mL", "reference_range_low": 2.40, "reference_range_high": 8.71, "date": "2026-01-07" },
+    { "name": "LDL", "value": 151, "unit": "mg/dL", "reference_range_high": 100, "date": "2026-01-07", "interpretation": "high" },
+    { "name": "HDL", "value": 36, "unit": "mg/dL", "reference_range_low": 40, "date": "2026-01-07", "interpretation": "low" },
+    { "name": "Total Cholesterol", "value": 205, "unit": "mg/dL", "reference_range_high": 200, "date": "2026-01-07", "interpretation": "high" },
+    { "name": "Triglycerides", "value": 73, "unit": "mg/dL", "reference_range_high": 150, "date": "2026-01-07" },
+    { "name": "hs-CRP", "value": 5.8, "unit": "mg/L", "reference_range_high": 1.0, "date": "2024-09-23", "interpretation": "high", "notes": "From worst lifestyle period" },
+    { "name": "SHBG", "value": 17, "unit": "nmol/L", "reference_range_low": 18, "reference_range_high": 54, "date": "2024-09-23", "interpretation": "low" },
+    { "name": "Creatinine", "value": 1.26, "unit": "mg/dL", "reference_range_low": 0.72, "reference_range_high": 1.18, "date": "2026-01-07", "interpretation": "high", "notes": "WITHOUT creatine supplementation" },
+    { "name": "eGFR (CKD-EPI)", "value": 79, "unit": "mL/min", "reference_range_low": 90, "date": "2026-01-07", "interpretation": "low" },
+    { "name": "eGFR (Cystatin C)", "value": 88, "unit": "mL/min", "reference_range_low": 90, "date": "2024-09-23", "notes": "More accurate for muscular patients" },
+    { "name": "Vitamin D", "value": 62, "unit": "nmol/L", "reference_range_low": 75, "date": "2026-01-07", "interpretation": "low" },
+    { "name": "HbA1c", "value": 30, "unit": "mmol/mol", "reference_range_high": 42, "date": "2024-09-23" },
+    { "name": "ALT", "value": 16, "unit": "U/L", "reference_range_high": 45, "date": "2026-01-07" },
+    { "name": "AST", "value": 28, "unit": "U/L", "reference_range_high": 35, "date": "2026-01-07" },
+    { "name": "Cis-Aconitic Acid (OAT)", "value": 65.09, "unit": "mmol/mol creatinine", "reference_range_low": 10, "reference_range_high": 36, "date": "2026-01-07", "interpretation": "high" },
+    { "name": "Suberic Acid (OAT)", "value": 0.11, "unit": "mmol/mol creatinine", "reference_range_low": 0.18, "reference_range_high": 2.2, "date": "2026-01-07", "interpretation": "low" },
+    { "name": "Estradiol", "value": null, "unit": "pmol/L", "notes": "NEVER TESTED — likely elevated from SubQ TRT into belly fat. Switched to IM March 18, 2026." }
+  ],
+  "family_history": [
+    { "relationship": "father", "condition": "Type 1 Diabetes", "deceased": true, "cause_of_death": "Hypoglycemic episode complications" }
+  ],
+  "social_history": {
+    "substance_use": [
+      { "substance": "Benzodiazepines", "status": "former", "quit_date": "2025-09", "notes": "6 months sober. GABA receptor recovery ongoing." },
+      { "substance": "Cannabis", "status": "former", "quit_date": "2025-09" },
+      { "substance": "Nicotine (snus)", "status": "former", "quit_date": "2025-09" },
+      { "substance": "Ketamine", "status": "former", "quit_date": "2025-09", "notes": "Previous daily use. Possible nephrotoxic damage." }
+    ],
+    "exercise": {
+      "type": "Resistance 4x/week + Zone 2 cardio daily",
+      "frequency_per_week": 6,
+      "duration_minutes": 60
+    },
+    "sleep": {
+      "hours_per_night": 7,
+      "bedtime": "12-3 AM (80% of nights)",
+      "wake_time": "8-10 AM",
+      "quality": "fair",
+      "issues": ["Late sleep onset", "Inconsistent schedule"]
+    },
+    "occupation": "Entrepreneur, multiple companies",
+    "stress_level": "high"
+  },
+  "goals": [
+    "Optimize mitochondrial function (OAT findings)",
+    "Reduce cardiovascular risk (LDL 151, HDL 36, CRP 5.8)",
+    "Preserve kidney function long-term (eGFR 88)",
+    "Manage autonomic dysregulation and social anxiety"
+  ]
+}

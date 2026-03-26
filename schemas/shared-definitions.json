@@ -1,0 +1,513 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "shared-definitions.json",
+  "title": "MedPanel Shared Definitions",
+  "description": "Single source of truth for all enums and reusable types. Every other schema references these via $ref. Resolves vocabulary fragmentation across specs, prompts, and schemas.",
+
+  "$defs": {
+
+    "evidence_tier": {
+      "type": "string",
+      "description": "Unified evidence quality scale. Maps GRADE (high/moderate/low/very_low), supplement tiers (S/A/B/C/D), and clinical tiers (strong/moderate/preliminary/mechanistic/unknown) into one system. Agents output this single scale; the moderator does not need cross-vocabulary mapping.\n\n  Mapping from legacy systems:\n    GRADE high           → strong\n    GRADE moderate        → moderate\n    Supplement Tier S     → strong\n    Supplement Tier A     → moderate\n    GRADE low / Tier B    → preliminary\n    GRADE very_low / Tier C → mechanistic_or_theoretical\n    Tier D / unknown      → insufficient\n    expert_opinion        → expert_opinion\n    extrapolated          → extrapolated\n\n  Functional medicine's custom tiers:\n    tier_1_conventional_agreement → strong\n    tier_2_plausible              → moderate\n    tier_3_theoretical            → mechanistic_or_theoretical\n    tier_4_unsupported            → insufficient",
+      "enum": [
+        "strong",
+        "moderate",
+        "preliminary",
+        "mechanistic_or_theoretical",
+        "expert_opinion",
+        "extrapolated",
+        "insufficient"
+      ]
+    },
+
+    "severity": {
+      "type": "string",
+      "description": "Unified severity scale for safety flags, risk flags, interactions, and any escalation trigger. Resolves 5 conflicting scales:\n  - agent-output.json safety_flags: critical/warning/caution/informational\n  - DISCUSSION-PROTOCOL risk_flags: red/orange/yellow/green\n  - consultation.json drug interactions: contraindicated/major/moderate/minor\n  - patient-profile conditions: mild/moderate/severe\n  - cross_examination disagreements: fundamental/nuanced/minor\n\n  Mapping:\n    critical / red / contraindicated → critical\n    warning / orange / major         → high\n    caution / yellow / moderate       → moderate\n    informational / green / minor     → low\n    (no flag)                         → informational",
+      "enum": [
+        "critical",
+        "high",
+        "moderate",
+        "low",
+        "informational"
+      ]
+    },
+
+    "confidence": {
+      "type": "number",
+      "description": "Numeric confidence score 0.0-1.0. Chosen over string enum because: (1) the DISCUSSION-PROTOCOL spec uses numeric confidence (0.92, 0.78) for reproducibility comparison, threshold checks, and false consensus detection; (2) numeric allows computing averages, deltas, and budget-linked degradation decisions; (3) the spec's are_outputs_acceptably_similar() function compares numeric confidence deltas. The old string enum (high/moderate/low/uncertain) maps approximately to: high ≥ 0.80, moderate 0.50-0.79, low 0.25-0.49, uncertain < 0.25.",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+
+    "specialist_type": {
+      "type": "string",
+      "description": "Complete list of all specialist types. Includes the original 6 plus internist (always-included anchor), and all specialists from the DISCUSSION-PROTOCOL DOMAIN_MAP and QUESTION-CLASSIFICATION DOMAIN_TO_SPECIALIST that were missing from the old schema (sports_medicine, sleep_medicine, hepatologist, immunologist, nutritional_medicine, gastroenterologist, hematologist, rheumatologist, dermatologist, reproductive_endocrinologist, ophthalmologist, otolaryngologist, pulmonologist, pain_management, geriatrician, obstetrician).",
+      "enum": [
+        "internist",
+        "cardiologist",
+        "endocrinologist",
+        "nephrologist",
+        "neuropsychiatrist",
+        "neurologist",
+        "functional_medicine",
+        "clinical_pharmacologist",
+        "gastroenterologist",
+        "hepatologist",
+        "pulmonologist",
+        "rheumatologist",
+        "sports_medicine",
+        "dermatologist",
+        "hematologist",
+        "immunologist",
+        "reproductive_endocrinologist",
+        "ophthalmologist",
+        "otolaryngologist",
+        "nutritional_medicine",
+        "sleep_medicine",
+        "pain_management",
+        "geriatrician",
+        "obstetrician"
+      ]
+    },
+
+    "consultation_type": {
+      "type": "string",
+      "description": "Unified consultation type. Resolves the mismatch between consultation.json classification.intent and DISCUSSION-PROTOCOL consultation_type. Uses the classifier's 8-value enum (Axis 1) as canonical because it is the entry point for every consultation and has the most precise definitions and few-shot examples.",
+      "enum": [
+        "diagnostic",
+        "therapeutic",
+        "prognostic",
+        "preventive",
+        "optimization",
+        "medication_management",
+        "interpretation",
+        "second_opinion"
+      ]
+    },
+
+    "urgency": {
+      "type": "string",
+      "description": "Urgency level from classifier (Axis 3) and safety system. The safety system can escalate urgency but classification can never downgrade below the safety system's determination.",
+      "enum": [
+        "emergent",
+        "urgent",
+        "semi_urgent",
+        "routine",
+        "optimization"
+      ]
+    },
+
+    "domain": {
+      "type": "string",
+      "description": "Organ system / body domain codes from the classification spec (Axis 2). Maps to ICD-10 chapter structures. Used in classifier output and evidence routing.",
+      "enum": [
+        "CARDIO",
+        "ENDO",
+        "NEURO",
+        "PSYCH",
+        "GI",
+        "RENAL",
+        "PULM",
+        "MSK",
+        "DERM",
+        "HEME",
+        "IMMUNE",
+        "REPRO",
+        "HEPAT",
+        "OPHTHO",
+        "ENT",
+        "NUTR",
+        "PHARM",
+        "SLEEP",
+        "PAIN",
+        "GERI"
+      ]
+    },
+
+    "verification_status": {
+      "type": "string",
+      "description": "PubMed PMID verification result. From EVIDENCE-PIPELINE.md Step 3 verification flow.",
+      "enum": [
+        "verified",
+        "misattributed",
+        "not_found",
+        "verification_failed",
+        "no_pmid"
+      ]
+    },
+
+    "study_type": {
+      "type": "string",
+      "description": "Type of clinical study. Used in citations and evidence package.",
+      "enum": [
+        "systematic_review",
+        "meta_analysis",
+        "rct",
+        "cohort",
+        "case_control",
+        "cross_sectional",
+        "case_report",
+        "guideline",
+        "mechanistic",
+        "expert_opinion",
+        "narrative_review",
+        "unknown"
+      ]
+    },
+
+    "medication_type": {
+      "type": "string",
+      "description": "Classification of substances in the patient's medication/supplement list.",
+      "enum": [
+        "prescription",
+        "otc",
+        "supplement",
+        "prn"
+      ]
+    },
+
+    "interaction_source": {
+      "type": "string",
+      "description": "Which database identified a drug/supplement interaction.",
+      "enum": [
+        "drugbank",
+        "natural_medicines",
+        "openfda_signal",
+        "perplexity_search",
+        "parametric"
+      ]
+    },
+
+    "source_confidence": {
+      "type": "string",
+      "description": "Reliability of an interaction data source.",
+      "enum": [
+        "high",
+        "moderate",
+        "low"
+      ]
+    },
+
+    "retrieval_step_status": {
+      "type": "string",
+      "description": "Status of an individual evidence pipeline step.",
+      "enum": [
+        "success",
+        "partial",
+        "timeout",
+        "error",
+        "skipped",
+        "not_subscribed"
+      ]
+    },
+
+    "retrieval_overall_status": {
+      "type": "string",
+      "description": "Overall health of the evidence retrieval pipeline.",
+      "enum": [
+        "complete",
+        "partial",
+        "degraded",
+        "unavailable"
+      ]
+    },
+
+    "consultation_status": {
+      "type": "string",
+      "description": "Lifecycle status of a consultation session.",
+      "enum": [
+        "classifying",
+        "retrieving_evidence",
+        "specialists_analyzing",
+        "discussion_round_2",
+        "discussion_round_3",
+        "synthesizing",
+        "safety_checking",
+        "completed",
+        "failed",
+        "cancelled"
+      ]
+    },
+
+    "termination_reason": {
+      "type": "string",
+      "description": "Why the discussion ended.",
+      "enum": [
+        "consensus_reached",
+        "consensus_after_round_2",
+        "max_rounds_reached",
+        "budget_exceeded",
+        "no_new_information",
+        "diminishing_returns",
+        "emergency_synthesis"
+      ]
+    },
+
+    "resolution_type": {
+      "type": "string",
+      "description": "How a Round 3 disagreement was resolved.",
+      "enum": [
+        "consensus",
+        "conditional",
+        "persistent_disagreement"
+      ]
+    },
+
+    "consensus_level": {
+      "type": "string",
+      "description": "Degree of agreement in the moderator's synthesis.",
+      "enum": [
+        "strong_consensus",
+        "moderate_consensus",
+        "single_specialist_domain",
+        "disagreement"
+      ]
+    },
+
+    "agreement_level": {
+      "type": "string",
+      "description": "Level of specialist agreement on a consensus item.",
+      "enum": [
+        "unanimous",
+        "strong_majority",
+        "majority"
+      ]
+    },
+
+    "model_tier": {
+      "type": "string",
+      "description": "LLM model tier assignment for a specialist.",
+      "enum": [
+        "opus",
+        "sonnet",
+        "haiku"
+      ]
+    },
+
+    "citation": {
+      "type": "object",
+      "description": "A single evidence citation. Agents reference these by citation_id from the evidence package; they do not fabricate new citations from memory.",
+      "required": ["title", "claim", "verification_status"],
+      "properties": {
+        "citation_id": {
+          "type": "string",
+          "description": "Unique identifier within the evidence package (e.g., 'C-001'). Agents reference this ID instead of fabricating citations."
+        },
+        "title": { "type": "string" },
+        "authors": { "type": "string" },
+        "journal": { "type": "string" },
+        "year": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2030
+        },
+        "pmid": {
+          "type": ["string", "null"],
+          "pattern": "^\\d{1,8}$",
+          "description": "PubMed ID. Null if not available or fabricated."
+        },
+        "doi": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "study_type": { "$ref": "#/$defs/study_type" },
+        "sample_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "claim": {
+          "type": "string",
+          "description": "The specific claim this citation supports"
+        },
+        "key_finding": { "type": "string" },
+        "evidence_quality": { "$ref": "#/$defs/evidence_tier" },
+        "verification_status": { "$ref": "#/$defs/verification_status" },
+        "verification_note": {
+          "type": "string",
+          "description": "Explanation when verification_status is not 'verified'"
+        },
+        "pubmed_metadata": {
+          "type": "object",
+          "description": "Actual PubMed metadata (if verified). Agents prefer this over search-engine-claimed metadata.",
+          "properties": {
+            "title": { "type": "string" },
+            "journal": { "type": "string" },
+            "year": { "type": "integer" },
+            "doi": { "type": "string" },
+            "abstract_excerpt": {
+              "type": "string",
+              "description": "First 500 chars of abstract for claim verification"
+            }
+          }
+        }
+      }
+    },
+
+    "guideline": {
+      "type": "object",
+      "description": "A clinical practice guideline reference.",
+      "properties": {
+        "body": {
+          "type": "string",
+          "description": "Issuing organization (e.g., 'AHA/ACC', 'ESC/ESH', 'Endocrine Society')"
+        },
+        "title": { "type": "string" },
+        "year": { "type": "integer" },
+        "recommendation": { "type": "string" },
+        "grade": {
+          "type": "string",
+          "description": "Guideline strength (e.g., 'I-A', 'IIa-B', 'Strong recommendation, moderate evidence')"
+        },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "interaction": {
+      "type": "object",
+      "description": "A drug-drug, drug-supplement, or supplement-supplement interaction.",
+      "required": ["drug_a", "drug_b", "severity", "source"],
+      "properties": {
+        "drug_a": { "type": "string" },
+        "drug_a_type": { "$ref": "#/$defs/medication_type" },
+        "drug_b": { "type": "string" },
+        "drug_b_type": { "$ref": "#/$defs/medication_type" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "description": { "type": "string" },
+        "clinical_consequence": { "type": "string" },
+        "management": {
+          "type": "string",
+          "description": "Recommended management if interaction exists"
+        },
+        "source": { "$ref": "#/$defs/interaction_source" },
+        "source_confidence": { "$ref": "#/$defs/source_confidence" },
+        "references": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "PMIDs or URLs supporting this interaction"
+        }
+      }
+    },
+
+    "lab_result": {
+      "type": "object",
+      "description": "A single lab result with reference ranges and interpretation.",
+      "required": ["name", "value", "unit", "date"],
+      "properties": {
+        "name": { "type": "string" },
+        "loinc_code": {
+          "type": "string",
+          "pattern": "^\\d{1,5}-\\d$"
+        },
+        "value": { "type": "number" },
+        "value_string": {
+          "type": "string",
+          "description": "For non-numeric results (e.g., 'positive', '<0.35')"
+        },
+        "unit": {
+          "type": "string",
+          "description": "UCUM standard (e.g., 'mg/dL', 'nmol/L')"
+        },
+        "reference_range_low": { "type": "number" },
+        "reference_range_high": { "type": "number" },
+        "interpretation": {
+          "type": "string",
+          "enum": ["normal", "high", "low", "critical_high", "critical_low"]
+        },
+        "date": { "type": "string", "format": "date" },
+        "lab_name": { "type": "string" },
+        "trend": {
+          "type": "string",
+          "enum": ["improving", "stable", "worsening", "insufficient_data"],
+          "description": "Requires 2+ readings. From DISCUSSION-PROTOCOL evidence package spec."
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "medication": {
+      "type": "object",
+      "description": "A medication or supplement entry.",
+      "required": ["name", "status"],
+      "properties": {
+        "name": { "type": "string" },
+        "rxnorm_cui": {
+          "type": "string",
+          "pattern": "^\\d+$"
+        },
+        "rxnorm_name": {
+          "type": "string",
+          "description": "Canonical name from RxNorm normalization"
+        },
+        "type": { "$ref": "#/$defs/medication_type" },
+        "dose": { "type": "string" },
+        "frequency": { "type": "string" },
+        "route": {
+          "type": "string",
+          "enum": ["oral", "sublingual", "topical", "injection_im", "injection_subq", "injection_iv", "inhaled", "rectal", "other"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "discontinued", "planned"]
+        },
+        "start_date": { "type": "string", "format": "date" },
+        "end_date": { "type": "string", "format": "date" },
+        "prescribing_reason": { "type": "string" },
+        "normalized": {
+          "type": "boolean",
+          "description": "Whether RxNorm normalization succeeded"
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "condition": {
+      "type": "object",
+      "description": "A diagnosed condition.",
+      "required": ["name", "status"],
+      "properties": {
+        "name": { "type": "string" },
+        "icd10_code": {
+          "type": "string",
+          "pattern": "^[A-Z][0-9]{2}(\\.[0-9]{1,4})?$"
+        },
+        "snomed_code": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["active", "resolved", "remission", "suspected"]
+        },
+        "onset_date": { "type": "string", "format": "date" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "safety_flag": {
+      "type": "object",
+      "description": "A safety concern identified by a specialist or the safety system.",
+      "required": ["flag_id", "concern", "severity", "urgency"],
+      "properties": {
+        "flag_id": {
+          "type": "string",
+          "description": "Unique ID (e.g., 'SF-CARD-001')"
+        },
+        "concern": { "type": "string" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "urgency": { "$ref": "#/$defs/urgency" },
+        "action_required": { "type": "string" },
+        "requires_specialist": { "$ref": "#/$defs/specialist_type" }
+      }
+    },
+
+    "budget_tier": {
+      "type": "object",
+      "description": "Tiered consultation budget ceiling. Replaces the flat $5 ceiling which is mathematically impossible for complex Opus-heavy cases. Based on complexity score ranges from QUESTION-CLASSIFICATION.md.",
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["simple", "moderate", "complex"]
+        },
+        "complexity_range": { "type": "string" },
+        "max_cost_usd": { "type": "number" },
+        "max_total_tokens": { "type": "integer" }
+      }
+    }
+  }
+}

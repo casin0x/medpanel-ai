@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "synthesis-output.json",
+  "title": "MedPanel Synthesis Output",
+  "description": "Structured output of the moderator/synthesis agent. This is the final user-facing structure. The moderator consumes all specialist outputs across all rounds and produces this unified synthesis. Based on moderator.md prompt phases. All enums via $ref to shared-definitions.json.",
+  "type": "object",
+  "required": ["synthesis_id", "safety_summary", "consensus_items", "divergent_items", "evidence_landscape", "recommendations", "questions_for_doctor", "disclaimers"],
+  "properties": {
+
+    "synthesis_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "specialists_synthesized": {
+      "type": "array",
+      "description": "Agent IDs whose outputs were synthesized.",
+      "items": { "type": "string" }
+    },
+
+    "rounds_synthesized": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3,
+      "description": "How many discussion rounds were included in this synthesis."
+    },
+
+    "safety_summary": {
+      "type": "object",
+      "description": "Phase 1 of moderator prompt: ALWAYS FIRST priority. Aggregated safety flags from all specialists, deduplicated with multi-specialist agreement notation.",
+      "required": ["flags", "emergency_detected"],
+      "properties": {
+        "emergency_detected": { "type": "boolean" },
+        "flags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["concern", "severity", "urgency", "source_specialists"],
+            "properties": {
+              "concern": { "type": "string" },
+              "severity": { "$ref": "shared-definitions.json#/$defs/severity" },
+              "urgency": { "$ref": "shared-definitions.json#/$defs/urgency" },
+              "action_required": { "type": "string" },
+              "source_specialists": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Which specialists flagged this concern"
+              },
+              "escalation_note": {
+                "type": "string",
+                "description": "If safety flags conflicted between specialists, this notes the escalation to the higher level"
+              }
+            }
+          }
+        },
+        "interaction_warnings": {
+          "type": "array",
+          "items": { "$ref": "shared-definitions.json#/$defs/interaction" },
+          "description": "Critical drug/supplement interactions surfaced for the patient"
+        },
+        "total_interactions_found": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+
+    "consensus_items": {
+      "type": "array",
+      "description": "Phase 2: Points where specialists agree. Categorized by consensus level.",
+      "items": {
+        "type": "object",
+        "required": ["point", "consensus_level", "supporting_specialists", "evidence_tier"],
+        "properties": {
+          "point": { "type": "string" },
+          "consensus_level": { "$ref": "shared-definitions.json#/$defs/consensus_level" },
+          "supporting_specialists": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "evidence_tier": { "$ref": "shared-definitions.json#/$defs/evidence_tier" },
+          "confidence": { "$ref": "shared-definitions.json#/$defs/confidence" },
+          "false_consensus_flag": {
+            "type": ["string", "null"],
+            "description": "If set, one of: POSSIBLE_ECHO_CHAMBER, CONFIDENCE_EXCEEDS_EVIDENCE, SUSPICIOUS_UNANIMITY. Null if consensus is genuine.",
+            "enum": [null, "POSSIBLE_ECHO_CHAMBER", "CONFIDENCE_EXCEEDS_EVIDENCE", "SUSPICIOUS_UNANIMITY"]
+          },
+          "devils_advocate_note": {
+            "type": "string",
+            "description": "Counter-argument from the devil's advocate pass, if triggered"
+          }
+        }
+      }
+    },
+
+    "divergent_items": {
+      "type": "array",
+      "description": "Phase 3: Points where specialists disagree. Never picks a winner.",
+      "items": {
+        "type": "object",
+        "required": ["topic", "perspectives", "user_guidance"],
+        "properties": {
+          "topic": { "type": "string" },
+          "resolution_status": {
+            "type": "string",
+            "enum": ["resolved_round_2", "resolved_round_3_consensus", "resolved_round_3_conditional", "persistent_disagreement"],
+            "description": "How (or whether) this disagreement was resolved during discussion"
+          },
+          "perspectives": {
+            "type": "array",
+            "description": "Two or more competing perspectives. Not limited to exactly 2.",
+            "items": {
+              "type": "object",
+              "required": ["position", "supporting_specialists", "evidence_tier"],
+              "properties": {
+                "position": { "type": "string" },
+                "supporting_specialists": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "evidence_tier": { "$ref": "shared-definitions.json#/$defs/evidence_tier" },
+                "confidence": { "$ref": "shared-definitions.json#/$defs/confidence" },
+                "patient_factors_favoring": {
+                  "type": "string",
+                  "description": "Patient-specific factors that make this perspective more applicable"
+                }
+              }
+            },
+            "minItems": 2
+          },
+          "user_guidance": {
+            "type": "string",
+            "description": "Actionable framing for the user (e.g., 'If your CAC score is > 0, perspective A applies...')"
+          },
+          "decision_framework": {
+            "type": "string",
+            "description": "Conditional recommendation when consensus was not reached (e.g., 'It depends on X')"
+          }
+        }
+      }
+    },
+
+    "evidence_landscape": {
+      "type": "object",
+      "description": "Phase 5: Evidence grouped by quality tier using the unified evidence_tier scale. All three legacy tier systems (GRADE, supplement S-D, functional medicine 1-4) are mapped to the unified scale.",
+      "properties": {
+        "strong": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Claims supported by strong evidence (RCTs, meta-analyses, strong guidelines)"
+        },
+        "moderate": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Claims with moderate evidence (smaller RCTs, observational, conditional guidelines)"
+        },
+        "preliminary": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Claims with preliminary evidence (pilot studies, case series)"
+        },
+        "mechanistic_or_theoretical": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Claims based on mechanism of action or theoretical reasoning without clinical data"
+        },
+        "insufficient": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Claims where evidence is insufficient to draw conclusions"
+        },
+        "being_researched": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Active areas of research where evidence may change"
+        },
+        "key_citations": {
+          "type": "array",
+          "items": { "$ref": "shared-definitions.json#/$defs/citation" },
+          "description": "Most important citations referenced across the synthesis"
+        }
+      }
+    },
+
+    "recommendations": {
+      "type": "array",
+      "description": "Synthesized recommendations from all specialists, deduplicated and prioritized. Each tracks its source and consensus status. Aligns with SQL recommendations table.",
+      "items": {
+        "type": "object",
+        "required": ["recommendation_id", "action", "category", "priority", "evidence_tier", "consensus_status", "source_specialists"],
+        "properties": {
+          "recommendation_id": {
+            "type": "string",
+            "description": "Unique ID for outcome tracking (e.g., 'SR-001')"
+          },
+          "action": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["medication", "supplement", "lifestyle", "monitoring", "testing", "referral", "behavioral", "dietary"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "confidence": { "$ref": "shared-definitions.json#/$defs/confidence" },
+          "evidence_tier": { "$ref": "shared-definitions.json#/$defs/evidence_tier" },
+          "consensus_status": { "$ref": "shared-definitions.json#/$defs/consensus_level" },
+          "source_specialists": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "source_recommendation_ids": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Original recommendation IDs from specialist outputs (e.g., ['R-ENDO-001', 'R-CARD-002'])"
+          },
+          "monitoring_plan": { "type": "string" },
+          "time_horizon": { "type": "string" },
+          "what_if_not_followed": { "type": "string" },
+          "contraindication_note": {
+            "type": "string",
+            "description": "Any contraindication concerns raised during cross-examination"
+          }
+        }
+      }
+    },
+
+    "questions_for_doctor": {
+      "type": "array",
+      "description": "Synthesized from all specialists' questions, deduplicated and prioritized. This is the primary user-facing output.",
+      "items": {
+        "type": "object",
+        "required": ["question"],
+        "properties": {
+          "question": { "type": "string" },
+          "context": {
+            "type": "string",
+            "description": "Why this question matters for this specific patient"
+          },
+          "ask_who": {
+            "type": "string",
+            "enum": ["primary_care", "specialist", "pharmacist", "any"],
+            "description": "Who is best suited to answer this question"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "source_specialists": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "minItems": 3,
+      "maxItems": 8
+    },
+
+    "information_gaps": {
+      "type": "array",
+      "description": "Aggregated information gaps from all specialists. Actionable: tells the user what additional data would improve the analysis.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "what_is_missing": { "type": "string" },
+          "why_it_matters": { "type": "string" },
+          "how_to_obtain": { "type": "string" },
+          "impact_on_recommendations": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Which recommendation_ids would change if this gap were filled"
+          }
+        }
+      }
+    },
+
+    "deferred_concerns": {
+      "type": "array",
+      "description": "New concerns raised in Round 3 that were not cross-examined. Flagged for future consultations.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "topic": { "type": "string" },
+          "raised_by": { "type": "string" },
+          "urgency": { "$ref": "shared-definitions.json#/$defs/urgency" },
+          "recommended_action": { "type": "string" }
+        }
+      }
+    },
+
+    "disclaimers": {
+      "type": "object",
+      "description": "Standard disclaimers per PRODUCT-POSITIONING.md. Generated by the moderator, not the specialists.",
+      "required": ["standard_disclaimer"],
+      "properties": {
+        "standard_disclaimer": {
+          "type": "string",
+          "description": "The PRODUCT-POSITIONING.md disclaimer: 'MedPanel is an exploration and education tool...'"
+        },
+        "evidence_limitations": {
+          "type": "string",
+          "description": "Specific limitations of the evidence reviewed in this consultation"
+        },
+        "profile_completeness_note": {
+          "type": "string",
+          "description": "If profile was incomplete (< 0.70), what impact that had on the analysis"
+        },
+        "budget_limitation_note": {
+          "type": "string",
+          "description": "If budget was exceeded before full consensus, notes what was left unresolved"
+        }
+      }
+    },
+
+    "meta": {
+      "type": "object",
+      "description": "Metadata about the synthesis process itself.",
+      "properties": {
+        "total_findings_across_specialists": { "type": "integer", "minimum": 0 },
+        "total_recommendations_before_dedup": { "type": "integer", "minimum": 0 },
+        "total_recommendations_after_dedup": { "type": "integer", "minimum": 0 },
+        "disagreements_resolved": { "type": "integer", "minimum": 0 },
+        "disagreements_persistent": { "type": "integer", "minimum": 0 },
+        "safety_flags_total": { "type": "integer", "minimum": 0 },
+        "safety_flags_after_dedup": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

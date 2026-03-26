@@ -1,0 +1,414 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent-output.json",
+  "title": "Specialist Agent Output",
+  "description": "Structured output for specialist agents across all discussion rounds. Uses oneOf to discriminate by round number. Round 1 = independent analysis, Round 2 = cross-examination, Round 3 = focused resolution. All enums from shared-definitions.json.",
+  "type": "object",
+  "required": ["agent_id", "specialist_type", "round", "model", "timestamp", "token_usage"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "description": "Unique identifier for this agent instance (e.g., 'endocrinology_001')"
+    },
+    "specialist_type": {
+      "$ref": "shared-definitions.json#/$defs/specialist_type"
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3,
+      "description": "Discussion round number"
+    },
+    "model": {
+      "type": "string",
+      "description": "Model version that produced this output (e.g., 'claude-opus-4-6')"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "token_usage": {
+      "type": "object",
+      "required": ["input", "output"],
+      "properties": {
+        "input": { "type": "integer", "minimum": 0 },
+        "output": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+
+  "oneOf": [
+    { "$ref": "#/$defs/round_1_output" },
+    { "$ref": "#/$defs/round_2_output" },
+    { "$ref": "#/$defs/round_3_output" }
+  ],
+
+  "$defs": {
+
+    "round_1_output": {
+      "type": "object",
+      "description": "Round 1: Independent Analysis. Agent receives evidence package and produces initial findings, recommendations, and risk flags.",
+      "properties": {
+        "round": { "const": 1 },
+
+        "findings": {
+          "type": "array",
+          "description": "Clinical findings from this specialist's analysis.",
+          "items": {
+            "type": "object",
+            "required": ["id", "category", "description", "severity", "confidence", "evidence_basis"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique finding ID (e.g., 'F-ENDO-001'). Referenced in Round 2 cross-examination."
+              },
+              "category": {
+                "type": "string",
+                "enum": ["abnormal_lab", "symptom_pattern", "risk_factor", "drug_interaction", "clinical_correlation", "information_gap"]
+              },
+              "description": { "type": "string" },
+              "severity": { "$ref": "shared-definitions.json#/$defs/severity" },
+              "confidence": { "$ref": "shared-definitions.json#/$defs/confidence" },
+              "evidence_basis": {
+                "type": "string",
+                "enum": ["direct_lab_value", "clinical_guideline", "research_evidence", "clinical_reasoning", "patient_reported"]
+              },
+              "evidence_tier": { "$ref": "shared-definitions.json#/$defs/evidence_tier" },
+              "clinical_significance": { "type": "string" },
+              "relevant_labs": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Lab test names that support this finding"
+              },
+              "interaction_flags": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Cross-domain flags (e.g., 'cardiology:lipid_impact'). Triggers cross_domain_questions."
+              },
+              "evidence_citations": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Citation IDs from the evidence package (e.g., ['C-001', 'C-005']). Agents cite FROM the evidence package, not from memory."
+              }
+            }
+          }
+        },
+
+        "recommendations": {
+          "type": "array",
+          "description": "Actionable recommendations from this specialist.",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "action", "priority", "confidence", "evidence_quality", "what_if_not_followed"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique recommendation ID (e.g., 'R-ENDO-001'). Referenced in Round 2."
+              },
+              "type": {
+                "type": "string",
+                "enum": ["medication_adjustment", "new_medication", "lifestyle_change", "monitoring", "testing", "referral", "supplement", "dietary", "behavioral"]
+              },
+              "action": { "type": "string" },
+              "priority": {
+                "type": "string",
+                "enum": ["critical", "high", "medium", "low"]
+              },
+              "confidence": { "$ref": "shared-definitions.json#/$defs/confidence" },
+              "time_horizon": { "type": "string" },
+              "contraindication_check": {
+                "type": "object",
+                "properties": {
+                  "checked_against": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "conflicts_found": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "interaction_risk": {
+                    "type": "string",
+                    "enum": ["none", "low", "moderate", "high"]
+                  }
+                }
+              },
+              "evidence_quality": { "$ref": "shared-definitions.json#/$defs/evidence_tier" },
+              "evidence_citations": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Citation IDs from the evidence package"
+              },
+              "monitoring_plan": { "type": "string" },
+              "what_if_not_followed": {
+                "type": "string",
+                "description": "Mandatory: forces the agent to articulate actual stakes"
+              }
+            }
+          }
+        },
+
+        "risk_flags": {
+          "type": "array",
+          "description": "Safety and risk concerns. IDs referenced in Round 2.",
+          "items": {
+            "$ref": "shared-definitions.json#/$defs/safety_flag"
+          }
+        },
+
+        "information_gaps": {
+          "type": "array",
+          "description": "Explicitly stated unknowns and missing data.",
+          "items": {
+            "type": "object",
+            "required": ["what_is_missing", "why_it_matters"],
+            "properties": {
+              "what_is_missing": { "type": "string" },
+              "why_it_matters": { "type": "string" },
+              "how_to_obtain": { "type": "string" }
+            }
+          }
+        },
+
+        "cross_domain_questions": {
+          "type": "array",
+          "description": "Questions directed at other specialists. Mandatory when interaction_flags are raised.",
+          "items": {
+            "type": "object",
+            "required": ["to_specialist", "question"],
+            "properties": {
+              "to_specialist": { "$ref": "shared-definitions.json#/$defs/specialist_type" },
+              "question": { "type": "string" },
+              "context": { "type": "string" }
+            }
+          }
+        },
+
+        "questions_for_doctor": {
+          "type": "array",
+          "description": "Questions the user should bring to their healthcare provider.",
+          "items": { "type": "string" },
+          "minItems": 2,
+          "maxItems": 6
+        },
+
+        "confidence_summary": {
+          "type": "object",
+          "required": ["overall_confidence"],
+          "properties": {
+            "overall_confidence": { "$ref": "shared-definitions.json#/$defs/confidence" },
+            "highest_confidence_finding": {
+              "type": "string",
+              "description": "Finding ID with highest confidence"
+            },
+            "lowest_confidence_recommendation": {
+              "type": "string",
+              "description": "Recommendation ID with lowest confidence"
+            },
+            "factors_reducing_confidence": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "what_would_change_assessment": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "New information that would materially change this analysis"
+            }
+          }
+        }
+      },
+      "required": ["round", "findings", "recommendations", "risk_flags", "information_gaps", "confidence_summary", "questions_for_doctor"]
+    },
+
+    "round_2_output": {
+      "type": "object",
+      "description": "Round 2: Cross-Examination. Agent reviews all other agents' Round 1 outputs and responds.",
+      "properties": {
+        "round": { "const": 2 },
+
+        "responding_to": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Agent IDs whose Round 1 output was reviewed"
+        },
+
+        "agreements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["with_agent", "finding_id", "my_independent_reasoning"],
+            "properties": {
+              "with_agent": { "type": "string" },
+              "finding_id": {
+                "type": "string",
+                "description": "The specific finding ID from Round 1 being agreed with"
+              },
+              "my_independent_reasoning": {
+                "type": "string",
+                "description": "This agent's OWN reasoning supporting the agreement. 'I agree with Dr X' without independent reasoning is prohibited."
+              },
+              "agreement_strengthens_confidence": { "type": "boolean" }
+            }
+          }
+        },
+
+        "disagreements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["with_agent", "their_recommendation_id", "their_position", "my_position", "my_evidence", "confidence_in_disagreement"],
+            "properties": {
+              "with_agent": { "type": "string" },
+              "their_recommendation_id": {
+                "type": "string",
+                "description": "The specific recommendation ID being disputed"
+              },
+              "their_position": { "type": "string" },
+              "my_position": { "type": "string" },
+              "my_evidence": { "type": "string" },
+              "confidence_in_disagreement": { "$ref": "shared-definitions.json#/$defs/confidence" },
+              "proposed_resolution": { "type": "string" }
+            }
+          }
+        },
+
+        "cross_domain_risks": {
+          "type": "array",
+          "description": "Recommendations from other specialists that could harm THIS specialist's domain.",
+          "items": {
+            "type": "object",
+            "required": ["recommendation_id", "from_agent", "risk_to_my_domain", "likelihood"],
+            "properties": {
+              "recommendation_id": { "type": "string" },
+              "from_agent": { "type": "string" },
+              "risk_to_my_domain": { "type": "string" },
+              "likelihood": {
+                "type": "string",
+                "enum": ["rare", "possible", "likely"]
+              },
+              "severity_if_occurs": { "$ref": "shared-definitions.json#/$defs/severity" },
+              "my_alternative": { "type": "string" },
+              "mitigation": { "type": "string" }
+            }
+          }
+        },
+
+        "questions_answered": {
+          "type": "array",
+          "description": "Responses to cross_domain_questions directed at this specialist in Round 1.",
+          "items": {
+            "type": "object",
+            "required": ["question_from", "original_question", "my_answer", "confidence"],
+            "properties": {
+              "question_from": { "type": "string" },
+              "original_question": { "type": "string" },
+              "my_answer": { "type": "string" },
+              "confidence": { "$ref": "shared-definitions.json#/$defs/confidence" }
+            }
+          }
+        },
+
+        "updated_recommendations": {
+          "type": "array",
+          "description": "Recommendations from Round 1 that changed based on cross-examination.",
+          "items": {
+            "type": "object",
+            "required": ["original_id", "change_type", "was", "now", "reason_for_change"],
+            "properties": {
+              "original_id": { "type": "string" },
+              "change_type": {
+                "type": "string",
+                "enum": ["modified", "withdrawn", "strengthened"]
+              },
+              "was": { "type": "string" },
+              "now": { "type": "string" },
+              "reason_for_change": { "type": "string" }
+            }
+          }
+        },
+
+        "unresolved_disagreements": {
+          "type": "array",
+          "description": "Disagreements that could not be resolved in Round 2. Triggers Round 3 when requires_round_3 is true.",
+          "items": {
+            "type": "object",
+            "required": ["disagreement_id", "parties", "topic", "my_final_position", "requires_round_3"],
+            "properties": {
+              "disagreement_id": {
+                "type": "string",
+                "description": "Unique ID (e.g., 'D-001'). Referenced in Round 3."
+              },
+              "parties": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "topic": { "type": "string" },
+              "my_final_position": { "type": "string" },
+              "evidence_strength_of_my_position": { "$ref": "shared-definitions.json#/$defs/evidence_tier" },
+              "requires_round_3": { "type": "boolean" }
+            }
+          }
+        },
+
+        "confidence_summary": {
+          "type": "object",
+          "required": ["overall_confidence"],
+          "properties": {
+            "overall_confidence": { "$ref": "shared-definitions.json#/$defs/confidence" },
+            "confidence_change_from_round_1": {
+              "type": "number",
+              "description": "Delta from Round 1 overall confidence (positive = increased)"
+            },
+            "factors_reducing_confidence": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["round", "responding_to", "agreements", "disagreements", "cross_domain_risks", "questions_answered", "updated_recommendations", "unresolved_disagreements", "confidence_summary"]
+    },
+
+    "round_3_output": {
+      "type": "object",
+      "description": "Round 3: Focused Resolution. Scoped narrowly to unresolved disagreements only. 500 token maximum. No new topics.",
+      "properties": {
+        "round": { "const": 3 },
+
+        "addressing_disagreement": {
+          "type": "string",
+          "description": "Disagreement ID from Round 2 being resolved (e.g., 'D-001')"
+        },
+
+        "final_position": {
+          "type": "object",
+          "required": ["recommendation", "evidence", "confidence"],
+          "properties": {
+            "recommendation": { "type": "string" },
+            "evidence": {
+              "type": "string",
+              "description": "Single strongest piece of evidence supporting position"
+            },
+            "confidence": { "$ref": "shared-definitions.json#/$defs/confidence" },
+            "concession": {
+              "type": "string",
+              "description": "What this specialist concedes to the other party"
+            }
+          }
+        },
+
+        "resolution_type": { "$ref": "shared-definitions.json#/$defs/resolution_type" },
+
+        "deferred_new_concern": {
+          "type": ["object", "null"],
+          "description": "New concerns are PROHIBITED in Round 3. If one arises, it is deferred for a separate consultation. Null if none.",
+          "properties": {
+            "topic": { "type": "string" },
+            "urgency": { "$ref": "shared-definitions.json#/$defs/urgency" }
+          }
+        }
+      },
+      "required": ["round", "addressing_disagreement", "final_position", "resolution_type"]
+    }
+  }
+}
