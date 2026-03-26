@@ -16,6 +16,9 @@ import {
   Globe,
   Zap,
   BookOpen,
+  Wrench,
+  UserPlus,
+  Mail,
 } from "lucide-react";
 import { Nav } from "@/components/nav";
 
@@ -137,6 +140,68 @@ export default function InvestorPage() {
               See How It Works <ArrowRight size={12} />
             </Link>
           </div>
+        </section>
+
+        {/* ─── TEAM STRUCTURE ─── */}
+        <section className="mb-10">
+          <SectionTitle icon={<UserPlus size={16} />} title="Team &amp; Operator Needed" />
+          <div className="rounded-[var(--mp-radius)] border border-slate-800 bg-gray-900/80 p-4">
+            <div className="mb-4 space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-[10px] font-bold text-emerald-400">F</div>
+                <div>
+                  <p className="text-sm font-medium text-slate-200">Founder / IP Creator <span className="text-[10px] text-emerald-400">(filled)</span></p>
+                  <p className="text-xs text-slate-400">Built the product, designed the protocol, wrote the specialist agents.
+                    Continues as technical advisor and IP owner. Not available as full-time operator — committed to other ventures.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500/10 text-[10px] font-bold text-amber-400">?</div>
+                <div>
+                  <p className="text-sm font-medium text-slate-200">Operator / Front Person <span className="text-[10px] text-amber-400">(seeking)</span></p>
+                  <p className="text-xs text-slate-400">Runs the sale process: doctor outreach, buyer conversations, conference demos,
+                    negotiation. Ideally someone with health tech BD experience or medical network.
+                    Compensated with 5-10% equity + monthly retainer from the raise.</p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-[var(--mp-radius-sm)] bg-slate-800/60 px-3 py-2">
+              <p className="text-xs text-slate-400">
+                <strong className="text-slate-300">Why this structure works:</strong> The IP is built.
+                What remains is sales execution — getting it in front of 50 doctors and 5 buyers.
+                This is a 6-month operator role, not a CTO hire. The right person has a Rolodex in
+                health tech, not a GitHub profile.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── REMAINING WORK ─── */}
+        <section className="mb-10">
+          <SectionTitle icon={<Wrench size={16} />} title="What&rsquo;s Left to Build" />
+          <p className="mb-3 text-sm text-slate-400">
+            The product is ~80% complete. Here&rsquo;s the remaining work to make it sellable:
+          </p>
+          <div className="space-y-1.5">
+            {[
+              { task: "Wire live AI pipeline (orchestrator calling real Claude specialists)", time: "2-3 weeks", status: "next" },
+              { task: "Connect PubMed evidence retrieval to live consultations", time: "1 week", status: "next" },
+              { task: "Stripe integration for D2C payments ($5-15 per consult)", time: "1 week", status: "planned" },
+              { task: "File provisional patent on cross-examination protocol", time: "2 weeks (legal)", status: "planned" },
+              { task: "Polish dual-mode output for 10 demo-ready consultations", time: "1-2 weeks", status: "planned" },
+              { task: "Supabase auth + user accounts", time: "1 week", status: "planned" },
+            ].map((t, i) => (
+              <div key={i} className="flex items-center gap-3 rounded-[var(--mp-radius-sm)] border border-slate-800/60 bg-gray-900/40 px-3 py-2">
+                <span className={`h-2 w-2 shrink-0 rounded-full ${t.status === "next" ? "bg-emerald-500" : "bg-slate-600"}`} />
+                <span className="flex-1 text-sm text-slate-300">{t.task}</span>
+                <span className="shrink-0 font-mono text-[10px] text-slate-500">{t.time}</span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-slate-500">
+            Total estimated: 6-8 weeks from funding to sellable product. The founder handles
+            all technical work. The operator starts buyer outreach in parallel from week 3.
+          </p>
         </section>
 
         {/* ─── THE THESIS ─── */}
@@ -311,6 +376,63 @@ export default function InvestorPage() {
           </div>
         </section>
 
+        {/* ─── BURN RATE + CAP TABLE ─── */}
+        <section className="mb-10">
+          <SectionTitle icon={<DollarSign size={16} />} title="Burn Rate &amp; Cap Table" />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[var(--mp-radius)] border border-slate-800 bg-gray-900/60 p-4">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Monthly Burn</p>
+              <div className="space-y-1.5">
+                {[
+                  { item: "Operator retainer", amount: "$3-5K" },
+                  { item: "API costs (Claude, hosting)", amount: "$500-1K" },
+                  { item: "SEM / content", amount: "$2-4K" },
+                  { item: "Legal / patent (amortized)", amount: "$1-2K" },
+                  { item: "Misc (domain, tools, travel)", amount: "$500-1K" },
+                ].map((b) => (
+                  <div key={b.item} className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400">{b.item}</span>
+                    <span className="font-mono text-slate-300">{b.amount}</span>
+                  </div>
+                ))}
+                <div className="border-t border-slate-800 pt-1.5 flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-200">Total monthly burn</span>
+                  <span className="font-mono font-medium text-emerald-400">$7-13K</span>
+                </div>
+                <p className="mt-1 text-[10px] text-slate-500">
+                  At $150K raised: 12-21 months of runway.
+                  Conference costs ($10-15K) are one-time, not monthly.
+                </p>
+              </div>
+            </div>
+            <div className="rounded-[var(--mp-radius)] border border-slate-800 bg-gray-900/60 p-4">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Cap Table</p>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-[10px] text-slate-500">Pre-investment</p>
+                  <div className="mt-1 flex gap-1">
+                    <div className="h-3 flex-[80] rounded-l-sm bg-emerald-500/40" />
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400">Founder: <span className="text-slate-200">100%</span></p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-500">Post-investment ($150K for 20%)</p>
+                  <div className="mt-1 flex gap-1">
+                    <div className="h-3 flex-[70] rounded-l-sm bg-emerald-500/40" />
+                    <div className="h-3 flex-[10] bg-amber-500/40" />
+                    <div className="h-3 flex-[20] rounded-r-sm bg-blue-500/40" />
+                  </div>
+                  <div className="mt-1 flex gap-3 text-xs">
+                    <span className="text-slate-400">Founder: <span className="text-slate-200">70-75%</span></span>
+                    <span className="text-slate-400">Operator: <span className="text-slate-200">5-10%</span></span>
+                    <span className="text-slate-400">Investor: <span className="text-slate-200">20%</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ─── RETURN SCENARIOS ─── */}
         <section className="mb-10">
           <SectionTitle icon={<TrendingUp size={16} />} title="Return Scenarios" />
@@ -471,7 +593,7 @@ export default function InvestorPage() {
                 <span className="mt-0.5 font-mono text-xs text-slate-500">01</span>
                 <div>
                   <p className="font-medium text-slate-200">Investment: SEK 1-2M (~$100-200K)</p>
-                  <p className="text-xs text-slate-400">Convertible note or SAFE with 1.5-2x liquidation preference</p>
+                  <p className="text-xs text-slate-400">Direct share subscription (nyemission) in Swedish AB with shareholder agreement. Simpler and cleaner than convertible structures for a quick-flip timeline.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -484,7 +606,7 @@ export default function InvestorPage() {
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 font-mono text-xs text-slate-500">03</span>
                 <div>
-                  <p className="font-medium text-slate-200">Liquidation preference: 1.5-2x</p>
+                  <p className="font-medium text-slate-200">Liquidation preference: 2x</p>
                   <p className="text-xs text-slate-400">Investor gets 2x their money back before any remaining proceeds are split by equity. See waterfall example in Return Scenarios below.</p>
                 </div>
               </div>
@@ -498,8 +620,22 @@ export default function InvestorPage() {
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 font-mono text-xs text-slate-500">05</span>
                 <div>
+                  <p className="font-medium text-slate-200">Post-sale: founder available for 3-month transition</p>
+                  <p className="text-xs text-slate-400">Buyer gets full IP transfer: codebase, schemas, prompts, patent, documentation. Founder provides 3 months of technical handoff (part-time) included in sale price. Extended consulting available at market rate if buyer requests.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 font-mono text-xs text-slate-500">06</span>
+                <div>
                   <p className="font-medium text-slate-200">If no sale by month 18</p>
-                  <p className="text-xs text-slate-400">Company continues operating. Investor retains equity. Product has intrinsic value — pivot to SaaS subscription if quick flip doesn&rsquo;t materialize.</p>
+                  <p className="text-xs text-slate-400">Company continues operating. Investor retains equity. Product has intrinsic value — pivot to SaaS subscription if quick flip doesn&rsquo;t materialize. Operator contract reviewed at month 12.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 font-mono text-xs text-slate-500">07</span>
+                <div>
+                  <p className="font-medium text-slate-200">Entity: Swedish AB (to be formed upon commitment)</p>
+                  <p className="text-xs text-slate-400">Company will be registered as a Swedish Aktiebolag upon investment commitment. SEK 25,000 share capital. IP assignment from founder to company on day one. 1-2 weeks to register via Bolagsverket.</p>
                 </div>
               </div>
             </div>
@@ -549,6 +685,34 @@ export default function InvestorPage() {
               >
                 Watch Engine Demo
               </Link>
+            </div>
+            <div className="mt-5 flex items-center justify-center gap-2 text-sm text-slate-400">
+              <Mail size={14} className="text-emerald-400" />
+              <a href="mailto:invest@medpanel.ai" className="text-emerald-400 transition-colors duration-200 hover:text-emerald-300">
+                invest@medpanel.ai
+              </a>
+            </div>
+            <p className="mt-1 text-[10px] text-slate-600">
+              Or reach out directly — happy to walk through the demo and protocol over a call.
+            </p>
+          </div>
+        </section>
+
+        {/* ─── ALSO SEEKING: OPERATOR ─── */}
+        <section className="mb-10">
+          <div className="rounded-[var(--mp-radius)] border border-amber-500/20 bg-amber-500/[0.04] p-4 text-center">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-amber-400">Also Seeking</p>
+            <p className="mb-2 text-sm font-medium text-slate-200">Health Tech Operator / BD Lead</p>
+            <p className="mx-auto max-w-md text-xs leading-relaxed text-slate-400">
+              We&rsquo;re looking for someone with health tech business development experience
+              to front the sale process. 6-month engagement, 5-10% equity + monthly retainer.
+              Ideal: network in clinical decision support, EHR, or digital health M&amp;A.
+            </p>
+            <div className="mt-3 flex items-center justify-center gap-2 text-sm">
+              <Mail size={14} className="text-amber-400" />
+              <a href="mailto:operator@medpanel.ai" className="text-amber-400 transition-colors duration-200 hover:text-amber-300">
+                operator@medpanel.ai
+              </a>
             </div>
           </div>
         </section>
