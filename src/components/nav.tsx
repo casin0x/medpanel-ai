@@ -37,6 +37,12 @@ export function Nav() {
           >
             Engine
           </Link>
+          <Link
+            href="/investor"
+            className="text-sm text-slate-400 transition-colors duration-200 hover:text-slate-50"
+          >
+            Investor
+          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -77,6 +83,13 @@ export function Nav() {
             onClick={() => setMobileOpen(false)}
           >
             Engine
+          </Link>
+          <Link
+            href="/investor"
+            className="block rounded py-3 text-base text-slate-400 transition-colors duration-200 hover:text-slate-50"
+            onClick={() => setMobileOpen(false)}
+          >
+            Investor
           </Link>
         </div>
       )}
