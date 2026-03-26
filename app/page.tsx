@@ -96,9 +96,13 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-slate-400">
-            AI specialists research, cross-examine, and surface what to discuss
-            with your patient — grounded in PubMed evidence.
+          <p className="mx-auto mb-3 max-w-xl text-base leading-relaxed text-slate-400">
+            Cross-specialty perspectives in minutes, not referral weeks.
+            AI specialists research, cross-examine, and surface what matters —
+            grounded in PubMed evidence.
+          </p>
+          <p className="mb-8 font-mono text-sm text-slate-500">
+            3 specialists &middot; 2 minutes &middot; PubMed-grounded
           </p>
 
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
@@ -116,10 +120,18 @@ export default function Home() {
               View Demo Results
             </Link>
           </div>
+          <p className="mt-4 text-sm text-slate-500">
+            <Link href="/consult" className="text-emerald-400/80 transition-colors duration-200 hover:text-emerald-300">
+              I&rsquo;m a patient exploring my options &rarr;
+            </Link>
+          </p>
         </section>
 
         {/* ─── PRODUCT PREVIEW (full-width breakout) ─── */}
         <section className="px-4 pb-8 pt-4 sm:px-8">
+          <p className="mx-auto mb-4 max-w-2xl text-center text-sm text-slate-500">
+            Here&rsquo;s what a real consultation looks like — a patient asks about berberine with declining kidney function:
+          </p>
           <div className="mx-auto max-w-5xl overflow-hidden rounded-lg border border-slate-700/50 shadow-2xl shadow-emerald-500/[0.03]">
             {/* Browser chrome */}
             <div className="flex items-center gap-2 border-b border-slate-800/80 bg-[#0d1117] px-4 py-2">
