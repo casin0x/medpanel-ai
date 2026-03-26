@@ -59,6 +59,7 @@ const RISKS = [
   { risk: "Competitor builds similar feature", likelihood: "Medium (40%)", mitigation: "This is why we sell fast, not build for years. 12-18 month window. Patent pending adds friction." },
   { risk: "Doctors don't engage with product", likelihood: "Low-Medium (25%)", mitigation: "Validated with real consultation data. If organic adoption is slow, budget includes $20-30K for targeted SEM to test demand." },
   { risk: "LLM costs increase or APIs change", likelihood: "Low (15%)", mitigation: "Multi-provider architecture. Claude, GPT-4.1, and Gemini as fallbacks. Margins at 85%+ absorb 2-3x cost increase." },
+  { risk: "Operator search takes too long", likelihood: "Medium (35%)", mitigation: "Founder can start buyer outreach in parallel (slower, less ideal). M&A broker partially fills the gap. If no operator by month 3, reallocate retainer budget to broker + part-time BD consultant." },
 ];
 
 /* ──────────────────────────────────────────────
@@ -362,6 +363,8 @@ export default function InvestorPage() {
           <SectionTitle icon={<Building2 size={16} />} title="Target Buyers" />
           <p className="mb-3 text-sm text-slate-400">
             At $1-2M, these companies buy features and IP — not companies. This is a product budget decision.
+            Deals at this size are typically private asset purchases, not announced M&amp;A — they happen
+            frequently but don&rsquo;t make TechCrunch.
           </p>
           <div className="space-y-2">
             {BUYERS.map((b) => (
@@ -424,7 +427,7 @@ export default function InvestorPage() {
                   </div>
                   <div className="mt-1 flex gap-3 text-xs">
                     <span className="text-slate-400">Founder: <span className="text-slate-200">70-75%</span></span>
-                    <span className="text-slate-400">Operator: <span className="text-slate-200">5-10%</span></span>
+                    <span className="text-slate-400">Operator: <span className="text-slate-200">5-10%</span> <span className="text-slate-600">(from founder)</span></span>
                     <span className="text-slate-400">Investor: <span className="text-slate-200">20%</span></span>
                   </div>
                 </div>
