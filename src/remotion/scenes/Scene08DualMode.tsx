@@ -1,7 +1,7 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { COLORS, GLASS } from "../constants";
 
-export function Scene06DualMode() {
+export function Scene08DualMode() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 

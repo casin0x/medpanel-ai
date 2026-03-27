@@ -2,10 +2,10 @@ import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } fr
 import { COLORS, GLASS } from "../constants";
 
 const PROBLEMS = [
-  { icon: "🕐", text: "Getting multiple specialist opinions takes weeks", delay: 0 },
-  { icon: "💬", text: "Most AI gives you one generic answer", delay: 15 },
-  { icon: "❌", text: "No cross-examination. No disagreements surfaced.", delay: 30 },
-  { icon: "📋", text: "No citations. No evidence tiers. No accountability.", delay: 45 },
+  { text: "Getting multiple specialist opinions takes weeks", delay: 0 },
+  { text: "Most AI gives you one generic answer", delay: 12 },
+  { text: "No cross-examination. No disagreements surfaced.", delay: 24 },
+  { text: "No citations. No evidence tiers. No accountability.", delay: 36 },
 ];
 
 export function Scene02Problem() {
@@ -65,7 +65,11 @@ export function Scene02Problem() {
                   transform: `translateX(${cardX}px)`,
                 }}
               >
-                <span style={{ fontSize: 32 }}>{p.icon}</span>
+                {/* X mark instead of emoji */}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={COLORS.red} strokeWidth="2" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
                 <span
                   style={{
                     fontSize: 26,

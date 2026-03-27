@@ -8,7 +8,7 @@ const CITATIONS = [
   { claim: "Berberine renal safety in CKD 3", source: "Observational, 2021", pmid: "33476817", tier: "Preliminary", tierColor: COLORS.amber, delay: 80 },
 ];
 
-export function Scene07Evidence() {
+export function Scene09Evidence() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 

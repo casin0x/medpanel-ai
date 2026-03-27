@@ -5,11 +5,13 @@ export const HEIGHT = 1080;
 // Scene durations in seconds
 export const SCENES = [
   { id: "hook", duration: 5 },
-  { id: "problem", duration: 10 },
-  { id: "product-intro", duration: 7 },
-  { id: "how-it-works", duration: 16 },
-  { id: "magic-moment", duration: 10 },
-  { id: "dual-mode", duration: 5 },
+  { id: "problem", duration: 8 },
+  { id: "product-intro", duration: 6 },
+  { id: "how-it-works", duration: 12 },
+  { id: "consensus", duration: 8 },
+  { id: "disagreements", duration: 8 },
+  { id: "questions", duration: 8 },
+  { id: "dual-mode", duration: 6 },
   { id: "evidence", duration: 5 },
   { id: "cta", duration: 7 },
 ] as const;

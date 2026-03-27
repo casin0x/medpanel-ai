@@ -1,7 +1,7 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
 import { COLORS } from "../constants";
 
-export function Scene08CTA() {
+export function Scene10CTA() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 

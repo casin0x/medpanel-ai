@@ -25,7 +25,7 @@ const SPECIALISTS = [
   },
 ];
 
-export function Scene05MagicMoment() {
+export function Scene06Disagreements() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
